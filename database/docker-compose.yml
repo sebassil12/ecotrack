@@ -1,0 +1,50 @@
+services:
+  ecotrack-db:
+    image: postgres:15-alpine
+    container_name: ecotrack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecotrack_db
+      POSTGRES_USER: ecotrack_user
+      POSTGRES_PASSWORD: ecotrack_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - ecotrack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecotrack_user -d ecotrack_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Opcional: PgAdmin para administrar la base de datos
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ecotrack-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ecotrack.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - ecotrack-db
+    networks:
+      - ecotrack-network
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  ecotrack-network:
+    driver: bridge
