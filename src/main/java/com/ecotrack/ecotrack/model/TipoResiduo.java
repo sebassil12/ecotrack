@@ -59,14 +59,6 @@ public class TipoResiduo {
     @Builder.Default
     private Boolean activo = true;
     
-    @Size(max = 100, message = "El color no puede exceder 100 caracteres")
-    @Column(length = 100)
-    private String color;
-    
-    @Size(max = 100, message = "El icono no puede exceder 100 caracteres")
-    @Column(length = 100)
-    private String icono;
-    
     // Relaciones
     @OneToMany(mappedBy = "tipoResiduo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Recoleccion> recolecciones;

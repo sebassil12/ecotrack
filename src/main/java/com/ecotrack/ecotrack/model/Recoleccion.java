@@ -83,13 +83,6 @@ public class Recoleccion {
     @JoinColumn(name = "validado_por")
     private Usuario validadoPor;
     
-    // Geolocalización
-    @Column(precision = 10, scale = 8)
-    private BigDecimal latitud;
-    
-    @Column(precision = 11, scale = 8)
-    private BigDecimal longitud;
-    
     @Size(max = 255, message = "Las observaciones no pueden exceder 255 caracteres")
     @Column(length = 255)
     private String observaciones;

@@ -76,10 +76,6 @@ public class PuntoVerde {
     @Column(length = 200)
     private String direccion;
     
-    @Size(max = 100, message = "El horario no puede exceder 100 caracteres")
-    @Column(length = 100)
-    private String horario;
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
