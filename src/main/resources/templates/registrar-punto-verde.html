@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrar Punto Verde</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        #map { height: 400px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h2>Registrar Nuevo Punto Verde</h2>
+    
+    <form th:action="@{/api/puntos-verdes/registrar}" th:object="${puntoRequest}" method="post">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" th:field="*{nombre}" id="nombre" required />
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color: red;"></span>
+        </div>
+        
+        <!-- Hidden fields for lat/long, populated by map click -->
+        <div class="form-group">
+            <label>Latitud:</label>
+            <input type="text" th:field="*{latitud}" id="latitud" readonly required />
+            <span th:if="${#fields.hasErrors('latitud')}" th:errors="*{latitud}" style="color: red;"></span>
+        </div>
+        
+        <div class="form-group">
+            <label>Longitud:</label>
+            <input type="text" th:field="*{longitud}" id="longitud" readonly required />
+            <span th:if="${#fields.hasErrors('longitud')}" th:errors="*{longitud}" style="color: red;"></span>
+        </div>
+        
+        <!-- Interactive Map -->
+        <div id="map"></div>
+        
+        <button type="submit">Registrar</button>
+    </form>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on a general location (e.g., Spain)
+        var map = L.map('map').setView([-0.183459, -78.474408], 9);
+        
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Variable to hold the marker
+        var marker;
+        
+        // On map click, place/update marker and set lat/long fields
+        map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker); // Remove existing marker if any
+            }
+            marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+            document.getElementById('latitud').value = e.latlng.lat.toFixed(8); // Set lat with 8 decimal places
+            document.getElementById('longitud').value = e.latlng.lng.toFixed(8); // Set long with 8 decimal places
+        });
+    </script>
+</body>
+</html>

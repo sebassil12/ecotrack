@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mapa de Puntos Verdes</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>#map { height: 600px; }</style>
+</head>
+<body>
+    <h2>Todos los Puntos Verdes</h2>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script th:inline="javascript">
+        // 1. Inicializa el mapa centrado en una ubicación general (ej. España)
+        var map = L.map('map').setView([-0.183459, -78.474408], 9);
+
+        // 2. Añade la capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Pasa la lista de puntos de Java a una variable de JavaScript
+        // Esta es la forma segura y recomendada de hacerlo con Thymeleaf
+        const puntos = /*[[${puntos}]]*/ [];
+
+        // 4. Recorre la lista de puntos y crea un marcador para cada uno
+        puntos.forEach(punto => {
+            L.marker([punto.latitud, punto.longitud]).addTo(map)
+                .bindPopup('<b>' + punto.nombre + '</b><br>' + punto.direccion);
+        });
+
+    </script>
+</body>
+</html>
