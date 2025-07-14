@@ -75,4 +75,14 @@ public class PuntoVerdeServicioImpl implements PuntoVerdeServicio {
     public List<PuntoVerde> listarTodos() {
         return repository.findAll();
     }
+
+	@Override
+	public void eliminarPunto(Long id) {
+		if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new RuntimeException("PuntoVerde no encontrado con ID: " + id);
+        }
+		
+	}
 }

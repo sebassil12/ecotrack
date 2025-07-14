@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
 import com.ecotrack.ecotrack.dto.PuntoVerdeResponse;
@@ -59,17 +61,6 @@ public class PuntoVerdeControlador {
         String completeURL= API + "/mapa-todos"; 
         return "redirect:" + completeURL; // Redirect to your existing all-points map
     }
-    
-    // Endpoint para la vista del mapa
-    @GetMapping("/{id}/mapa")
-    public String verMapa(@PathVariable Long id, Model model) {
-        PuntoVerde punto = service.buscarPorId(id);
-        model.addAttribute("latitud", punto.getLatitud());
-        model.addAttribute("longitud", punto.getLongitud());
-        model.addAttribute("direccion", punto.getDireccion());
-        model.addAttribute("nombre", punto.getNombre());
-        return "mapa";
-    }
 
     @GetMapping("/mapa-todos") // Nueva URL para ver todos los puntos
     public String verMapaDeTodos(Model model) {
@@ -77,5 +68,25 @@ public class PuntoVerdeControlador {
         List<PuntoVerde> puntos = service.listarTodos(); 
         model.addAttribute("puntos", puntos); // Pasamos la lista completa
         return "mapa-todos"; // Usaremos una nueva plantilla
+    }
+    
+    @GetMapping("/lista")
+    public String mostrarLista(Model model) {
+        List<PuntoVerde> puntos = service.listarTodos();
+        model.addAttribute("puntos", puntos);
+        return "lista-puntos-verdes"; // Thymeleaf template name
+    }
+    
+    @PostMapping("/eliminar")
+    public String eliminarPunto(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            service.eliminarPunto(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Punto verde eliminado exitosamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar: " + e.getMessage());
+        }
+        
+        String completeURL = API + "/lista";
+        return "redirect:" + completeURL; // Redirect back to the list
     }
 }

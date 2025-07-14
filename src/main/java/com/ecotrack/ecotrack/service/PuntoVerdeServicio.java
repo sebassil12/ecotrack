@@ -13,4 +13,6 @@ public interface PuntoVerdeServicio {
 	public PuntoVerdeResponse registrar(PuntoVerdeRequest request);
 	
 	public PuntoVerde buscarPorId(Long id);
+	
+	public void eliminarPunto(Long id);
 }

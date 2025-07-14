@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Puntos Verdes</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .button { margin: 10px 5px; padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; }
+        .delete-button { background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Lista de Todos los Puntos Verdes</h2>
+    
+    <!-- Success/Error Messages -->
+    <div th:if="${mensaje}" class="success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    
+    <!-- Buttons for Redirects -->
+    <a href="/api/puntos-verdes/mapa-todos" class="button">Ver Todos en el Mapa</a>
+    <a href="/api/puntos-verdes/registrar" class="button">Crear Nuevo Punto Verde</a>
+    
+    <!-- Table of Points -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Latitud</th>
+                <th>Longitud</th>
+                <th>Dirección</th>
+                <th>Activo</th>
+                <th>Fecha Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="punto : ${puntos}">
+                <td th:text="${punto.id}"></td>
+                <td th:text="${punto.nombre}"></td>
+                <td th:text="${punto.descripcion}"></td>
+                <td th:text="${punto.latitud}"></td>
+                <td th:text="${punto.longitud}"></td>
+                <td th:text="${punto.direccion}"></td>
+                <td th:text="${punto.activo} ? 'Sí' : 'No'"></td>
+                <td th:text="${punto.fechaRegistro}"></td>
+                <td>
+                    <!-- Delete Form -->
+                    <form th:action="@{/api/puntos-verdes/eliminar}" method="post" style="display: inline;">
+                        <input type="hidden" name="id" th:value="${punto.id}" />
+                        <button type="submit" class="delete-button" onclick="return confirm('¿Estás seguro de eliminar este punto verde?');">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${puntos.isEmpty()}">
+                <td colspan="9">No hay puntos verdes registrados.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
