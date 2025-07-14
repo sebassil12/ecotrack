@@ -46,7 +46,11 @@
                             <!-- CHANGE HERE: Replace with your actual profile edit endpoint -->
                             <li><a class="dropdown-item" th:href="@{/perfil/editar}">Editar Perfil</a></li> <!-- e.g., /perfil/editar or your path -->
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li> <!-- Assuming a logout endpoint -->
+                            <li>
+                            <form th:action="@{/logout}" method="post">
+						        <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+						    </form>
+                            </li> <!-- Assuming a logout endpoint -->
                         </ul>
                     </li>
                 </ul>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Iniciar Sesión - Ecotrack</title>
+    <!-- Bootstrap CSS for styling and responsiveness (matching other templates) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons for icons (matching other templates) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Matching styles: light background, fonts, and custom tweaks */
+        body { background-color: #f8f9fa; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-card { max-width: 400px; width: 100%; }
+        .btn-login { background-color: #4CAF50; border-color: #4CAF50; } /* Matching green from other templates */
+        .btn-login:hover { background-color: #45a049; }
+        .error { color: #dc3545; } /* Red for errors */
+    </style>
+</head>
+<body>
+    <div class="card login-card shadow">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <a href="/" class="text-decoration-none"><i class="bi bi-house-door-fill" style="font-size: 2rem; color: #4CAF50;"></i></a> <!-- Home icon linking to public home (adjust href) -->
+                <h2 class="mt-2">Iniciar Sesión en Ecotrack</h2>
+            </div>
+            
+            <!-- Login Form (responsive with Bootstrap) -->
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email:</label>
+                    <input type="email" id="username" name="username" class="form-control" required autofocus />
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" name="password" class="form-control" required />
+                </div>
+                
+                <!-- Error Message (if login fails) -->
+                <div th:if="${param.error}" class="error text-center mb-3">Email o contraseña incorrectos.</div>
+                <!-- Logout Message -->
+                <div th:if="${param.logout}" class="text-success text-center mb-3">Sesión cerrada exitosamente.</div>
+                
+                <button type="submit" class="btn btn-login text-white w-100">Iniciar Sesión</button>
+            </form>
+            
+            <!-- Optional: Link to registration or forgot password -->
+			<div class="text-center mt-3">
+			    <a href="/registro" class="btn btn-outline-success">Registrarse</a> <!-- New Register button, green outline to match style -->
+			</div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS (not strictly needed for login, but for consistency) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

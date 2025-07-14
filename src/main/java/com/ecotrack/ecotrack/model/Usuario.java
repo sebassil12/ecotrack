@@ -73,7 +73,6 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String password;
     
-    @NotNull(message = "El rol es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RolUsuario rol;

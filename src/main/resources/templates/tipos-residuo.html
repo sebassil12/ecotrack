@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipos Residuo Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="container my-5">
+    <h1 class="mb-4">Registered Tipos Residuo</h1>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Add New Tipo Residuo</button>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Puntos Base</th>
+                    <th>Unidad Medida</th>
+                    <th>Activo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${tiposResiduo}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.nombre}"></td>
+                    <td th:text="${item.descripcion}"></td>
+                    <td th:text="${item.puntosBase}"></td>
+                    <td th:text="${item.unidadMedida}"></td>
+                    <td th:text="${item.activo} ? 'Yes' : 'No'"></td>
+                    <td>
+                        <a th:href="@{/tipos-residuo/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Edit</a>
+                        <form th:action="@{/tipos-residuo/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tiposResiduo)}">
+                    <td colspan="7" class="text-center">No tipos residuo found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Tipo Residuo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/tipos-residuo}" th:object="${nuevoTipoResiduo}" method="post">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required minlength="2" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" th:field="*{descripcion}" maxlength="255"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="puntosBase" class="form-label">Puntos Base</label>
+                            <input type="number" class="form-control" id="puntosBase" th:field="*{puntosBase}" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="unidadMedida" class="form-label">Unidad Medida</label>
+                            <select class="form-select" id="unidadMedida" th:field="*{unidadMedida}">
+                                <option value="kg">kg</option>
+                                <option value="unidad">unidad</option>
+                                <option value="litro">litro</option>
+                                <!-- Add more common units as needed -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="activo" class="form-label">Activo</label>
+                            <select class="form-select" id="activo" th:field="*{activo}">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" th:if="${editTipoResiduo != null}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Tipo Residuo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/tipos-residuo/update/{id}(id=${editTipoResiduo.id})}" th:object="${editTipoResiduo}" method="post">
+                        <div class="mb-3">
+                            <label for="editNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="editNombre" th:field="*{nombre}" required minlength="2" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="editDescripcion" th:field="*{descripcion}" maxlength="255"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPuntosBase" class="form-label">Puntos Base</label>
+                            <input type="number" class="form-control" id="editPuntosBase" th:field="*{puntosBase}" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUnidadMedida" class="form-label">Unidad Medida</label>
+                            <select class="form-select" id="editUnidadMedida" th:field="*{unidadMedida}">
+                                <option value="kg" th:selected="${editTipoResiduo.unidadMedida == 'kg'}">kg</option>
+                                <option value="unidad" th:selected="${editTipoResiduo.unidadMedida == 'unidad'}">unidad</option>
+                                <option value="litro" th:selected="${editTipoResiduo.unidadMedida == 'litro'}">litro</option>
+                                <!-- Add more -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editActivo" class="form-label">Activo</label>
+                            <select class="form-select" id="editActivo" th:field="*{activo}">
+                                <option value="true" th:selected="${editTipoResiduo.activo}">Yes</option>
+                                <option value="false" th:selected="${!editTipoResiduo.activo}">No</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-open edit modal if editing
+        window.addEventListener('load', function() {
+            if (window.location.pathname.includes('/edit/')) {
+                new bootstrap.Modal(document.getElementById('editModal')).show();
+            }
+        });
+    </script>
+</body>
+</html>
