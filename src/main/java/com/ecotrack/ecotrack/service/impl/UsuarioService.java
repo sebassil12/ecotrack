@@ -3,6 +3,9 @@ package com.ecotrack.ecotrack.service.impl;
 import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.repository.UsuarioRepositorio;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +48,9 @@ public class UsuarioService {
     }
 
     // Read by ID
-    public Optional<Usuario> encontrarPorId(Long id) {
-        return usuarioRepository.findById(id);
+    public Usuario encontrarPorId(Long id) {
+    	return usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
     }
 
     // Read by Email
@@ -105,8 +109,7 @@ public class UsuarioService {
 
     // Update any user (for admins, allows all fields including role/activo)
     public Usuario actualizarUsuarioAdmin(Usuario updatedUsuario) {
-        Usuario existing = encontrarPorId(updatedUsuario.getId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        Usuario existing = encontrarPorId(updatedUsuario.getId());
         // Update all fields
         existing.setNombre(updatedUsuario.getNombre());
         existing.setApellidos(updatedUsuario.getApellidos());

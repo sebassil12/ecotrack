@@ -8,8 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="container my-5">
-    <h1 class="mb-4">Registered Recolecciones</h1>
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Register New Item</button>
+    <h1 class="mb-4">Registrar Recolecciones</h1>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Registrar Nueva Recolección</button>
     
     <div class="table-responsive">
         <table class="table table-striped">
@@ -21,8 +21,9 @@
                     <th>Cantidad</th>
                     <th>Puntos</th>
                     <th>Validado</th>
+                    <th>Punto Verde</th>
                     <th>Fecha</th>
-                    <th>Actions</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,17 +33,18 @@
                     <td th:text="${item.tipoResiduo.nombre} ?: ${item.tipoResiduo.id}"></td>
                     <td th:text="${item.cantidad}"></td>
                     <td th:text="${item.puntos}"></td>
+                    <td th:text="${item.puntoVerde.nombre} ?: ${item.puntoVerde.id}"></td>
                     <td th:text="${item.validado} ? 'Yes' : 'No'"></td>
                     <td th:text="${#temporals.format(item.fechaRecoleccion, 'yyyy-MM-dd HH:mm')}"></td>
                     <td>
-                        <a th:href="@{/recolecciones/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Edit</a>
+                        <a th:href="@{/recolecciones/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Editar</a>
                         <form th:action="@{/recolecciones/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Estás seguro?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(recolecciones)}">
-                    <td colspan="8" class="text-center">No recolecciones found.</td>
+                    <td colspan="8" class="text-center">No hay recolecciones encontradas.</td>
                 </tr>
             </tbody>
         </table>
@@ -53,7 +55,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Register New Recoleccion</h5>
+                    <h5 class="modal-title">Registrar Nueva recolección</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -75,6 +77,12 @@
                             <input type="number" step="0.01" class="form-control" id="cantidad" th:field="*{cantidad}" required min="0.01">
                         </div>
                         <div class="mb-3">
+                            <label for="puntoVerde" class="form-label">Punto Verde</label>
+                            <select class="form-select" id="puntoVerde" th:field="*{puntoVerde}">
+                                <option th:each="pv : ${puntosVerdes}" th:value="${pv.id}" th:text="${pv.nombre} ?: ${pv.id}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="validado" class="form-label">Validado</label>
                             <select class="form-select" id="validado" th:field="*{validado}">
                                 <option value="false">No</option>
@@ -87,8 +95,8 @@
                         </div>
                         <!-- Add more fields, e.g., <select th:field="*{puntoVerde}"> with ${puntosVerdes} -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -96,61 +104,8 @@
         </div>
     </div>
 
-    <!-- Edit Modal (populated via model on GET /edit/{id}) -->
-    <div class="modal fade" id="editModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Recoleccion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/recolecciones/update/{id}(id=${editRecoleccion.id})}" th:object="${editRecoleccion}" method="post" th:if="${editRecoleccion != null}">
-                        <div class="mb-3">
-                            <label for="editUsuario" class="form-label">Usuario</label>
-                            <select class="form-select" id="editUsuario" th:field="*{usuario}">
-                                <option th:each="u : ${usuarios}" th:value="${u.id}" th:text="${u.nombre} ?: ${u.id}" th:selected="${u.id == editRecoleccion.usuario.id}"></option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editTipoResiduo" class="form-label">Tipo Residuo</label>
-                            <select class="form-select" id="editTipoResiduo" th:field="*{tipoResiduo}">
-                                <option th:each="tr : ${tiposResiduo}" th:value="${tr.id}" th:text="${tr.nombre} ?: ${tr.id}" th:selected="${tr.id == editRecoleccion.tipoResiduo.id}"></option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCantidad" class="form-label">Cantidad</label>
-                            <input type="number" step="0.01" class="form-control" id="editCantidad" th:field="*{cantidad}" required min="0.01">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editValidado" class="form-label">Validado</label>
-                            <select class="form-select" id="editValidado" th:field="*{validado}">
-                                <option value="false" th:selected="${!editRecoleccion.validado}">No</option>
-                                <option value="true" th:selected="${editRecoleccion.validado}">Yes</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editObservaciones" class="form-label">Observaciones</label>
-                            <textarea class="form-control" id="editObservaciones" th:field="*{observaciones}" maxlength="255"></textarea>
-                        </div>
-                        <!-- Add more fields as needed -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="text-center mt-3">
+        <a href="/dashboard" class="btn btn-outline-primary"><i class="bi bi-house-door-fill"></i> Volver al Home</a> <!-- Home button -->
     </div>
-
-    <script>
-        // Simple JS to auto-open edit modal after page load if editing
-        window.addEventListener('load', function() {
-            if (window.location.pathname.includes('/edit/')) {
-                new bootstrap.Modal(document.getElementById('editModal')).show();
-            }
-        });
-    </script>
 </body>
 </html>

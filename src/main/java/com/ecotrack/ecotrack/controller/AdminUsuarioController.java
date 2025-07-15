@@ -34,8 +34,7 @@ public class AdminUsuarioController {
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Usuario usuario = usuarioService.encontrarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        Usuario usuario = usuarioService.encontrarPorId(id);
         model.addAttribute("usuario", usuario);
         return "editar-usuario"; // Template name
     }

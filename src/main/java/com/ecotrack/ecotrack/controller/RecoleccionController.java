@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/recolecciones")
@@ -28,7 +29,8 @@ public class RecoleccionController {
     @Autowired
     private TipoResiduoService tipoResiduoService; // For dropdowns
 
-    // @Autowired private PuntoVerdeService puntoVerdeService; // Uncomment if needed
+    @Autowired 
+    private PuntoVerdeServicioImpl puntoVerdeServicio; // Uncomment if needed
 
     @GetMapping
     public String showRecolecciones(Model model) {
@@ -45,18 +47,42 @@ public class RecoleccionController {
         return "redirect:/recolecciones";
     }
 
+    // CAMBIOS AQUÍ: Retorna la nueva plantilla y prepara solo lo necesario para edición
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Recoleccion recoleccion = recoleccionService.getById(id);
         model.addAttribute("editRecoleccion", recoleccion);
-        setupDropdowns(model);
-        // Redirect to main page but with modal open? For simplicity, we render the same template
-        return "recolecciones"; // Or a separate edit template if preferred
+        setupDropdowns(model); // Prepara los dropdowns (usuarios, tiposResiduo, puntosVerdes)
+        return "edit-recoleccion"; // Nueva plantilla
     }
 
     @PostMapping("/update/{id}")
     public String updateRecoleccion(@PathVariable Long id, @ModelAttribute("editRecoleccion") Recoleccion updatedRecoleccion) {
-        recoleccionService.updateRecoleccion(id, updatedRecoleccion);
+        // Cargar la recolección existente para evitar sobrescribir campos no editados
+        Recoleccion existingRecoleccion = recoleccionService.getById(id);
+        
+        // Actualizar campos simples
+        existingRecoleccion.setCantidad(updatedRecoleccion.getCantidad());
+        existingRecoleccion.setValidado(updatedRecoleccion.getValidado());
+        existingRecoleccion.setObservaciones(updatedRecoleccion.getObservaciones());
+        // ... otros campos simples que edites
+        
+        // Actualizar entidades relacionadas basadas en IDs
+        if (updatedRecoleccion.getUsuario() != null && updatedRecoleccion.getUsuario().getId() != null) {
+            Usuario usuario = usuarioService.encontrarPorId(updatedRecoleccion.getUsuario().getId()); // Asume que tienes un método getById en UsuarioService
+            existingRecoleccion.setUsuario(usuario);
+        }
+        if (updatedRecoleccion.getTipoResiduo() != null && updatedRecoleccion.getTipoResiduo().getId() != null) {
+            TipoResiduo tipoResiduo = tipoResiduoService.getById(updatedRecoleccion.getTipoResiduo().getId()); // Asume método getById
+            existingRecoleccion.setTipoResiduo(tipoResiduo);
+        }
+        if (updatedRecoleccion.getPuntoVerde() != null && updatedRecoleccion.getPuntoVerde().getId() != null) {
+            PuntoVerde puntoVerde = puntoVerdeServicio.buscarPorId(updatedRecoleccion.getPuntoVerde().getId()); // Asume método getById
+            existingRecoleccion.setPuntoVerde(puntoVerde);
+        }
+        
+        // Guardar la recolección actualizada
+        recoleccionService.updateRecoleccion(id, existingRecoleccion);
         return "redirect:/recolecciones";
     }
 
@@ -69,6 +95,6 @@ public class RecoleccionController {
     private void setupDropdowns(Model model) {
         model.addAttribute("usuarios", usuarioService.listarTodos());
         model.addAttribute("tiposResiduo", tipoResiduoService.getAll());
-        // model.addAttribute("puntosVerdes", puntoVerdeService.getAll()); // Uncomment if needed
+        model.addAttribute("puntosVerdes", puntoVerdeServicio.listarTodos()); // Uncomment if needed
     }
 }
