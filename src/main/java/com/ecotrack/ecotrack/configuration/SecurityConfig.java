@@ -24,17 +24,18 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(); // For hashing passwords
     }
 
-    @Bean
+   @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .authorizeHttpRequests(authorize -> authorize
-        	    // ... existing public matchers like /login, /registro ...
-        	    .requestMatchers("/admin/**").hasAuthority("ADMINISTRADOR") // Only admins access /admin/**
-        	    .requestMatchers("/perfil/**").authenticated() // Any authenticated user for self-profile
-        	    .requestMatchers("/dashboard/**", "/puntos-verdes/**", "/api/**").authenticated()
-        	    .anyRequest().authenticated()
-        	)
-        	// ... rest of the config unchanged
+            .authorizeHttpRequests(authorize -> authorize
+                // Allow public access to login, registration, and static resources
+                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**").permitAll()
+                // Secure your app's endpoints (require login)
+                .requestMatchers("/dashboard/**", "/puntos-verdes/**", "/api/**").authenticated()
+                // Example: Role-based (uncomment if needed for admin-only pages)
+                // .requestMatchers("/admin/**").hasAuthority("ADMINISTRADOR")
+                .anyRequest().authenticated() // All other requests require auth
+            )
             .formLogin(form -> form
                 .loginPage("/login") // Custom login page
                 .defaultSuccessUrl("/dashboard", true) // Redirect after login
