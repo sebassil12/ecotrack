@@ -3,6 +3,7 @@ package com.ecotrack.ecotrack.service.impl;
 import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.repository.UsuarioRepositorio;
+import com.ecotrack.ecotrack.service.UsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -18,12 +19,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UsuarioService {
+public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepositorio usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepositorio usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioServiceImpl(UsuarioRepositorio usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }

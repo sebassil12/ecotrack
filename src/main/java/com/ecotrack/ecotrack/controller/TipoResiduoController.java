@@ -1,7 +1,7 @@
 package com.ecotrack.ecotrack.controller;
 
 import com.ecotrack.ecotrack.model.TipoResiduo;
-import com.ecotrack.ecotrack.service.impl.TipoResiduoService;
+import com.ecotrack.ecotrack.service.impl.TipoResiduoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import java.util.List;
 public class TipoResiduoController {
 
     @Autowired
-    private TipoResiduoService tipoResiduoService;
+    private TipoResiduoServiceImpl tipoResiduoService;
 
     @GetMapping
     public String showTiposResiduo(Model model) {

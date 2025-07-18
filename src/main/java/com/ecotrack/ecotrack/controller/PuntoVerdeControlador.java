@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
 import com.ecotrack.ecotrack.dto.PuntoVerdeResponse;
 import com.ecotrack.ecotrack.model.PuntoVerde;
-import com.ecotrack.ecotrack.service.impl.PuntoVerdeServicioImpl;
+import com.ecotrack.ecotrack.service.impl.PuntoVerdeServiceImpl;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PuntoVerdeControlador {
 
-    private final PuntoVerdeServicioImpl service;
+    private final PuntoVerdeServiceImpl service;
     private String API = "/api/puntos-verdes";
     
     @GetMapping("/registrar")

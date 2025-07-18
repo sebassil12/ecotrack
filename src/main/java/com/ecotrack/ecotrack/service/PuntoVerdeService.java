@@ -6,7 +6,7 @@ import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
 import com.ecotrack.ecotrack.dto.PuntoVerdeResponse;
 import com.ecotrack.ecotrack.model.PuntoVerde;
 
-public interface PuntoVerdeServicio {
+public interface PuntoVerdeService {
 	
 	public List<PuntoVerde> listarTodos();
 	

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Rankings - EcoTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Lista de Rankings</h2>
+                <a href="/rankings/new" class="btn btn-light">Crear Nuevo Ranking</a>
+            </div>
+            <div class="card-body">
+                <div th:if="${success}" class="alert alert-success" role="alert">[[${success}]]</div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">[[${error}]]</div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Año</th>
+                                <th>Mes</th>
+                                <th>Posición</th>
+                                <th>Puntos</th>
+                                <th>Total Residuos</th>
+                                <th>Fecha Cálculo</th>
+                                <th>Recolecciones</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ranking : ${rankings}">
+                                <td th:text="${ranking.id}"></td>
+                                <td th:text="${ranking.usuario.nombre}"></td> <!-- Asume que Usuario tiene 'nombre' -->
+                                <td th:text="${ranking.año}"></td>
+                                <td th:text="${ranking.mes}"></td>
+                                <td th:text="${ranking.posicion}"></td>
+                                <td th:text="${ranking.puntos}"></td>
+                                <td th:text="${ranking.totalResiduos}"></td>
+                                <td th:text="${ranking.fechaCalculo}"></td>
+                                <td th:text="${ranking.recoleccionesCount}"></td>
+                                <td>
+                                    <a th:href="@{/rankings/edit/{id}(id=${ranking.id})}" class="btn btn-sm btn-primary">Editar</a>
+                                    <form th:action="@{/rankings/delete/{id}(id=${ranking.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este ranking?');">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(rankings)}">
+                                <td colspan="10" class="text-center">No hay rankings registrados aún.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

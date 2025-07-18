@@ -11,14 +11,14 @@ import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
 import com.ecotrack.ecotrack.dto.PuntoVerdeResponse;
 import com.ecotrack.ecotrack.model.PuntoVerde;
 import com.ecotrack.ecotrack.repository.PuntoVerdeRepositorio;
-import com.ecotrack.ecotrack.service.PuntoVerdeServicio;
+import com.ecotrack.ecotrack.service.PuntoVerdeService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PuntoVerdeServicioImpl implements PuntoVerdeServicio {
+public class PuntoVerdeServiceImpl implements PuntoVerdeService {
 	
 	private final PuntoVerdeRepositorio repository;
     private final WebClient nominatimClient;

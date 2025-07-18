@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Medalla - EcoTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h2 class="mb-0">Editar Medalla</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/medallas}" th:object="${medalla}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID (No editable)</label>
+                        <input type="text" class="form-control" id="id" th:value="*{id}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
+                        <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="3"></textarea>
+                        <div th:if="${#fields.hasErrors('descripcion')}" class="text-danger" th:errors="*{descripcion}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="icono" class="form-label">Icono (URL o nombre de ícono)</label>
+                        <input type="text" class="form-control" id="icono" th:field="*{icono}">
+                        <div th:if="${#fields.hasErrors('icono')}" class="text-danger" th:errors="*{icono}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="puntosRequeridos" class="form-label">Puntos Requeridos</label>
+                        <input type="number" class="form-control" id="puntosRequeridos" th:field="*{puntosRequeridos}" min="1" required>
+                        <div th:if="${#fields.hasErrors('puntosRequeridos')}" class="text-danger" th:errors="*{puntosRequeridos}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Medalla</label>
+                        <select class="form-select" id="tipo" th:field="*{tipo}" required>
+                            <option th:each="tipo : ${tiposMedalla}" th:value="${tipo}" th:text="${tipo}" th:selected="${tipo == medalla.tipo}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="color" class="form-label">Color (ej. #00FF00 o green)</label>
+                        <input type="text" class="form-control" id="color" th:field="*{color}">
+                        <div th:if="${#fields.hasErrors('color')}" class="text-danger" th:errors="*{color}"></div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="activa" th:field="*{activa}">

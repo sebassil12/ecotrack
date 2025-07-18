@@ -2,6 +2,8 @@ package com.ecotrack.ecotrack.service.impl;
 
 import com.ecotrack.ecotrack.model.TipoResiduo;
 import com.ecotrack.ecotrack.repository.TipoResiduoRepository;
+import com.ecotrack.ecotrack.service.TipoResiduoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class TipoResiduoService {
+public class TipoResiduoServiceImpl implements TipoResiduoService {
 
     @Autowired
     private TipoResiduoRepository tipoResiduoRepository;

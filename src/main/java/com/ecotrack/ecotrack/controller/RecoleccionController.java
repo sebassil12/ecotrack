@@ -4,10 +4,10 @@ import com.ecotrack.ecotrack.model.Recoleccion;
 import com.ecotrack.ecotrack.model.TipoResiduo;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.model.PuntoVerde; // If needed
-import com.ecotrack.ecotrack.service.impl.RecoleccionService;
-import com.ecotrack.ecotrack.service.impl.UsuarioService; // Assume exists
-import com.ecotrack.ecotrack.service.impl.TipoResiduoService; // Assume exists
-import com.ecotrack.ecotrack.service.impl.PuntoVerdeServicioImpl; // Assume exists if needed
+import com.ecotrack.ecotrack.service.impl.RecoleccionServiceImpl;
+import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl; // Assume exists
+import com.ecotrack.ecotrack.service.impl.TipoResiduoServiceImpl; // Assume exists
+import com.ecotrack.ecotrack.service.impl.PuntoVerdeServiceImpl; // Assume exists if needed
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +21,16 @@ import java.util.Optional;
 public class RecoleccionController {
 
     @Autowired
-    private RecoleccionService recoleccionService;
+    private RecoleccionServiceImpl recoleccionService;
 
     @Autowired
-    private UsuarioService usuarioService; // For dropdowns
+    private UsuarioServiceImpl usuarioService; // For dropdowns
 
     @Autowired
-    private TipoResiduoService tipoResiduoService; // For dropdowns
+    private TipoResiduoServiceImpl tipoResiduoService; // For dropdowns
 
     @Autowired 
-    private PuntoVerdeServicioImpl puntoVerdeServicio; // Uncomment if needed
+    private PuntoVerdeServiceImpl puntoVerdeServicio; // Uncomment if needed
 
     @GetMapping
     public String showRecolecciones(Model model) {

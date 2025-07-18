@@ -1,7 +1,7 @@
 package com.ecotrack.ecotrack.controller;
 
 import com.ecotrack.ecotrack.model.Usuario;
-import com.ecotrack.ecotrack.service.impl.UsuarioService;
+import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +19,9 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ADMINISTRADOR')") // Extra security layer
 public class AdminUsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServiceImpl usuarioService;
 
-    public AdminUsuarioController(UsuarioService usuarioService) {
+    public AdminUsuarioController(UsuarioServiceImpl usuarioService) {
         this.usuarioService = usuarioService;
     }
 

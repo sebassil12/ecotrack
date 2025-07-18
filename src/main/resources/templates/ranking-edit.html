@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Ranking - EcoTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h2 class="mb-0">Editar Ranking</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/rankings}" th:object="${ranking}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID (No editable)</label>
+                        <input type="text" class="form-control" id="id" th:value="*{id}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label">Usuario</label>
+                        <select class="form-select" id="usuario" th:field="*{usuario}" required>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nombre}" th:selected="${usuario.id == ranking.usuario.id}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('usuario')}" class="text-danger" th:errors="*{usuario}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="año" class="form-label">Año</label>
+                        <input type="number" class="form-control" id="año" th:field="*{año}" min="2023" max="2030" required>
+                        <div th:if="${#fields.hasErrors('año')}" class="text-danger" th:errors="*{año}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mes" class="form-label">Mes</label>
+                        <input type="number" class="form-control" id="mes" th:field="*{mes}" min="1" max="12" required>
+                        <div th:if="${#fields.hasErrors('mes')}" class="text-danger" th:errors="*{mes}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="posicion" class="form-label">Posición</label>
+                        <input type="number" class="form-control" id="posicion" th:field="*{posicion}" min="1" required>
+                        <div th:if="${#fields.hasErrors('posicion')}" class="text-danger" th:errors="*{posicion}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="puntos" class="form-label">Puntos</label>
+                        <input type="number" class="form-control" id="puntos" th:field="*{puntos}" min="0" required>
+                        <div th:if="${#fields.hasErrors('puntos')}" class="text-danger" th:errors="*{puntos}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalResiduos" class="form-label">Total Residuos</label>
+                        <input type="number" class="form-control" id="totalResiduos" th:field="*{totalResiduos}" step="0.01" min="0" required>
+                        <div th:if="${#fields.hasErrors('totalResiduos')}" class="text-danger" th:errors="*{totalResiduos}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="recoleccionesCount" class="form-label">Conteo de Recolecciones</label>
+                        <input type="number" class="form-control" id="recoleccionesCount" th:field="*{recoleccionesCount}" min="0" required>
+                        <div th:if="${#fields.hasErrors('recoleccionesCount')}" class="text-danger" th:errors="*{recoleccionesCount}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaCalculo" class="form-label">Fecha de Cálculo (No editable)</label>
+                        <input type="text" class="form-control" id="fechaCalculo" th:value="${ranking.fechaCalculo}" disabled>
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <a href="/rankings" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

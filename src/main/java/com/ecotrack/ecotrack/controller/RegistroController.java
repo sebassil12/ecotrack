@@ -1,7 +1,7 @@
 package com.ecotrack.ecotrack.controller;
 
 import com.ecotrack.ecotrack.model.Usuario;
-import com.ecotrack.ecotrack.service.impl.UsuarioService;
+import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,9 +14,9 @@ import jakarta.validation.Valid;
 @Controller
 public class RegistroController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServiceImpl usuarioService;
 
-    public RegistroController(UsuarioService usuarioService) {
+    public RegistroController(UsuarioServiceImpl usuarioService) {
         this.usuarioService = usuarioService;
     }
 

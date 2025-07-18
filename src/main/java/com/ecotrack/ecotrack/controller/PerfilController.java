@@ -2,7 +2,7 @@ package com.ecotrack.ecotrack.controller;
 
 import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
 import com.ecotrack.ecotrack.model.Usuario;
-import com.ecotrack.ecotrack.service.impl.UsuarioService;
+import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,9 +18,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/perfil")
 public class PerfilController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServiceImpl usuarioService;
 
-    public PerfilController(UsuarioService usuarioService) {
+    public PerfilController(UsuarioServiceImpl usuarioService) {
         this.usuarioService = usuarioService;
     }
 
