@@ -2,28 +2,113 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Iniciar Sesión - Ecotrack</title>
-    <!-- Bootstrap CSS for styling and responsiveness (matching other templates) -->
+    <!-- Bootstrap CSS for advanced styling, responsiveness, and components -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons for icons (matching other templates) -->
+    <!-- Bootstrap Icons for modern, scalable icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts for improved typography and UX readability (matching dashboard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Matching styles: light background, fonts, and custom tweaks */
-        body { background-color: #f8f9fa; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .login-card { max-width: 400px; width: 100%; }
-        .btn-login { background-color: #4CAF50; border-color: #4CAF50; } /* Matching green from other templates */
-        .btn-login:hover { background-color: #45a049; }
-        .error { color: #dc3545; } /* Red for errors */
+        /* Global styles matching eco-theme from dashboard */
+        body {
+            font-family: 'Poppins', sans-serif; /* Modern, readable font */
+            background-color: #f0f4f8; /* Soft blue-gray background for calm eco vibe */
+            color: #333; /* Dark text for high contrast */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            border: none; /* Remove borders for clean look */
+            border-radius: 15px; /* Rounded corners for approachability */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+        }
+        .login-card:hover {
+            transform: translateY(-5px); /* Subtle lift on hover for interactivity */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+        }
+        .card-body {
+            padding: 2.5rem; /* Ample padding for better UX spacing */
+        }
+        h2 {
+            font-weight: 700; /* Bold for visual hierarchy */
+            color: #28a745; /* Eco-green accent */
+        }
+        .form-label {
+            font-weight: 500; /* Semi-bold labels for clarity */
+            color: #555; /* Subtle gray for secondary text */
+        }
+        .form-control {
+            border-radius: 8px; /* Rounded inputs for modern feel */
+            border: 1px solid #ced4da; /* Default Bootstrap border */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Focus animation */
+        }
+        .form-control:focus {
+            border-color: #28a745; /* Green focus for theme consistency */
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25); /* Soft glow */
+        }
+        .btn-login {
+            background-color: #28a745; /* Matching eco-green */
+            border-color: #28a745;
+            font-weight: 600; /* Bold button text */
+            border-radius: 8px; /* Rounded for touch-friendly */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Hover effects */
+        }
+        .btn-login:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px); /* Slight lift */
+        }
+        .btn-outline-success {
+            border-radius: 8px; /* Consistent rounding */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .btn-outline-success:hover {
+            background-color: #28a745; /* Fill on hover for feedback */
+            color: #fff;
+        }
+        .error {
+            color: #dc3545; /* Red for errors */
+            font-size: 0.9rem; /* Smaller for subtlety */
+            background-color: #f8d7da; /* Light red bg for visibility */
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .text-success {
+            font-size: 0.9rem;
+            background-color: #d4edda; /* Light green bg */
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .home-icon {
+            font-size: 2.5rem; /* Larger icon for impact */
+            color: #28a745; /* Green accent */
+            transition: color 0.3s ease;
+        }
+        .home-icon:hover {
+            color: #218838; /* Darker on hover */
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 576px) {
+            .card-body { padding: 2rem 1.5rem; } /* Tighter padding on mobile */
+        }
     </style>
 </head>
 <body>
-    <div class="card login-card shadow">
-        <div class="card-body p-4">
+    <div class="card login-card">
+        <div class="card-body">
             <div class="text-center mb-4">
-                <a href="/" class="text-decoration-none"><i class="bi bi-house-door-fill" style="font-size: 2rem; color: #4CAF50;"></i></a> <!-- Home icon linking to public home (adjust href) -->
-                <h2 class="mt-2">Iniciar Sesión en Ecotrack</h2>
+                <a href="/" class="text-decoration-none"><i class="bi bi-house-door-fill home-icon"></i></a> <!-- Enhanced home icon -->
+                <h2 class="mt-3">Iniciar Sesión en Ecotrack</h2> <!-- Slightly increased spacing -->
             </div>
             
-            <!-- Login Form (responsive with Bootstrap) -->
+            <!-- Login Form with improved UX and accessibility -->
             <form th:action="@{/login}" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Email:</label>
@@ -35,22 +120,22 @@
                     <input type="password" id="password" name="password" class="form-control" required />
                 </div>
                 
-                <!-- Error Message (if login fails) -->
-                <div th:if="${param.error}" class="error text-center mb-3">Email o contraseña incorrectos.</div>
-                <!-- Logout Message -->
-                <div th:if="${param.logout}" class="text-success text-center mb-3">Sesión cerrada exitosamente.</div>
+                <!-- Error Message with styled alert-like appearance -->
+                <div th:if="${param.error}" class="error text-center">Email o contraseña incorrectos.</div>
+                <!-- Logout Message with success styling -->
+                <div th:if="${param.logout}" class="text-success text-center">Sesión cerrada exitosamente.</div>
                 
                 <button type="submit" class="btn btn-login text-white w-100">Iniciar Sesión</button>
             </form>
             
-            <!-- Optional: Link to registration or forgot password -->
-			<div class="text-center mt-3">
-			    <a href="/registro" class="btn btn-outline-success">Registrarse</a> <!-- New Register button, green outline to match style -->
-			</div>
+            <!-- Register link with consistent button styling -->
+            <div class="text-center mt-3">
+                <a href="/registro" class="btn btn-outline-success w-100">Registrarse</a> <!-- Full-width for mobile UX -->
+            </div>
         </div>
     </div>
     
-    <!-- Bootstrap JS (not strictly needed for login, but for consistency) -->
+    <!-- Bootstrap JS Bundle for potential interactivity -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

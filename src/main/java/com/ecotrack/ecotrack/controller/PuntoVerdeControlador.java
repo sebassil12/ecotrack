@@ -3,7 +3,6 @@ package com.ecotrack.ecotrack.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
-import com.ecotrack.ecotrack.dto.PuntoVerdeResponse;
 import com.ecotrack.ecotrack.model.PuntoVerde;
 import com.ecotrack.ecotrack.service.impl.PuntoVerdeServiceImpl;
 
@@ -53,7 +51,7 @@ public class PuntoVerdeControlador {
         }
         
         // Call your service to save (similar to your API POST)
-        PuntoVerdeResponse response = service.registrar(request);
+       service.registrar(request);
         
         // Optionally, add success message or redirect to the map view
         model.addAttribute("mensaje", "Punto verde registrado exitosamente.");
@@ -87,6 +85,56 @@ public class PuntoVerdeControlador {
         }
         
         String completeURL = API + "/lista";
+        return "redirect:" + completeURL; // Redirect back to the list
+    }
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEdicion(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            PuntoVerde punto = service.buscarPorId(id); // Assume service has obtenerPorId(Long id)
+            if (punto == null) {
+                redirectAttributes.addFlashAttribute("error", "Punto verde no encontrado.");
+                return "redirect:" + API + "/lista";
+            }
+            
+            // Convert PuntoVerde to PuntoVerdeRequest for form binding
+            PuntoVerdeRequest request = new PuntoVerdeRequest(
+                punto.getNombre(),
+                punto.getDescripcion(),
+                punto.getLatitud(),
+                punto.getLongitud()
+            );
+            
+            model.addAttribute("puntoRequest", request);
+            model.addAttribute("id", id); // Pass ID for form action
+            return "editar-punto-verde"; // Thymeleaf template for edit form
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al cargar el punto verde: " + e.getMessage());
+            return "redirect:" + API + "/lista";
+        }
+    }
+
+    // New POST endpoint to handle edit submission
+    @PostMapping("/editar/{id}")
+    public String editarPunto(@PathVariable Long id, 
+                              @Valid @ModelAttribute("puntoRequest") PuntoVerdeRequest request, 
+                              BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            // If validation fails, redisplay the form with errors
+            model.addAttribute("id", id); // Retain ID for form action
+            return "editar-punto-verde";
+        }
+        
+        try {
+            service.actualizar(id, request); // Assume service has actualizar(Long id, PuntoVerdeRequest request)
+            redirectAttributes.addFlashAttribute("mensaje", "Punto verde actualizado exitosamente.");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al actualizar: " + e.getMessage());
+            model.addAttribute("id", id); // Retain ID for form action
+            return "editar-punto-verde";
+        }
+        
+        String completeURL = API + "/lista"; 
         return "redirect:" + completeURL; // Redirect back to the list
     }
 }

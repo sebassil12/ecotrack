@@ -6,13 +6,13 @@ import com.ecotrack.ecotrack.model.TipoResiduo;
 
 public interface TipoResiduoService {
 
-    public TipoResiduo createTipoResiduo(TipoResiduo tipoResiduo);
+    TipoResiduo createTipoResiduo(TipoResiduo tipoResiduo);
 
-    public List<TipoResiduo> getAll();
+    List<TipoResiduo> getAll();
 
-    public TipoResiduo getById(Long id);
+    TipoResiduo getById(Long id);
 
-    public TipoResiduo updateTipoResiduo(Long id, TipoResiduo updatedTipoResiduo);
+    TipoResiduo updateTipoResiduo(Long id, TipoResiduo updatedTipoResiduo);
 
-    public void deleteTipoResiduo(Long id);
+    void deleteTipoResiduo(Long id);
 }

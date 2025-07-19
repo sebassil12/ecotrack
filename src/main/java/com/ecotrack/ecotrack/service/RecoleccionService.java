@@ -6,19 +6,19 @@ import com.ecotrack.ecotrack.model.Recoleccion;
 import com.ecotrack.ecotrack.model.Usuario;
 public interface RecoleccionService {
 
-    public Recoleccion registrarRecoleccion(Recoleccion recoleccion);
+    Recoleccion registrarRecoleccion(Recoleccion recoleccion);
 
-    public Recoleccion getById(Long id);
+    Recoleccion getById(Long id);
 
-    public Recoleccion updateRecoleccion(Long id, Recoleccion updatedRecoleccion);
+    Recoleccion updateRecoleccion(Long id, Recoleccion updatedRecoleccion);
 
-    public void deleteRecoleccion(Long id);
+    void deleteRecoleccion(Long id);
 
-    public Recoleccion validarRecoleccion(Long id, Usuario validadoPor);
+    Recoleccion validarRecoleccion(Long id, Usuario validadoPor);
 
-    public List<Recoleccion> getAll();
+    List<Recoleccion> getAll();
 
-    public List<Recoleccion> getByUsuario(Long usuarioId);
+    List<Recoleccion> getAllByUsuario(Usuario usuario);
 
-    public List<Recoleccion> getValidated();
+    List<Recoleccion> getValidated();
 }

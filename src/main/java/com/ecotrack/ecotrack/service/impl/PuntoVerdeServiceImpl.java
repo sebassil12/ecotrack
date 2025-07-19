@@ -85,4 +85,34 @@ public class PuntoVerdeServiceImpl implements PuntoVerdeService {
         }
 		
 	}
+
+    @Override
+    public PuntoVerdeResponse actualizar(Long id, PuntoVerdeRequest request) {
+        PuntoVerde punto = repository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("PuntoVerde no encontrado con ID: " + id));
+
+    boolean latChanged = !punto.getLatitud().equals(request.latitud());
+    boolean lonChanged = !punto.getLongitud().equals(request.longitud());
+
+    punto.setNombre(request.nombre());
+    punto.setDescripcion(request.descripcion());
+    punto.setLatitud(request.latitud());
+    punto.setLongitud(request.longitud());
+
+    if (latChanged || lonChanged) {
+        String direccion = obtenerDireccion(request.latitud(), request.longitud());
+        punto.setDireccion(direccion != null && direccion.length() > 200 ? direccion.substring(0, 200) : direccion);
+    }
+
+    repository.save(punto);
+
+    return new PuntoVerdeResponse(
+        punto.getId(),
+        punto.getNombre(),
+        punto.getDescripcion(),
+        punto.getLatitud(),
+        punto.getLongitud(),
+        punto.getDireccion()
+    );
+    }
 }

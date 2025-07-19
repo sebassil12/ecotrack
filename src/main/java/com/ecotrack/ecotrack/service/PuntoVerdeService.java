@@ -8,11 +8,13 @@ import com.ecotrack.ecotrack.model.PuntoVerde;
 
 public interface PuntoVerdeService {
 	
-	public List<PuntoVerde> listarTodos();
-	
-	public PuntoVerdeResponse registrar(PuntoVerdeRequest request);
-	
-	public PuntoVerde buscarPorId(Long id);
-	
-	public void eliminarPunto(Long id);
+	List<PuntoVerde> listarTodos();
+
+	PuntoVerdeResponse registrar(PuntoVerdeRequest request);
+
+	PuntoVerde buscarPorId(Long id);
+
+	void eliminarPunto(Long id);
+
+	PuntoVerdeResponse actualizar(Long id, PuntoVerdeRequest request);
 }

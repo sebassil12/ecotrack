@@ -1,6 +1,8 @@
 package com.ecotrack.ecotrack.repository;
 
 import com.ecotrack.ecotrack.model.Recoleccion;
+import com.ecotrack.ecotrack.model.Usuario;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +23,5 @@ public interface RecoleccionRepository extends JpaRepository<Recoleccion, Long> 
     // Find validated ones (using your index)
     List<Recoleccion> findByValidado(Boolean validado);
 
-	List<Recoleccion> findByUsuarioId(Long usuarioId);
+	List<Recoleccion> findByUsuario(Usuario usuario);
 }

@@ -8,8 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="container my-5">
-    <h1 class="mb-4">Registered Tipos Residuo</h1>
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Add New Tipo Residuo</button>
+    <h1 class="mb-4">Registrar Tipos de Residuo</h1>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Agregar Nuevo Tipo Residuo</button>
     
     <div class="table-responsive">
         <table class="table table-striped">
@@ -33,14 +33,14 @@
                     <td th:text="${item.unidadMedida}"></td>
                     <td th:text="${item.activo} ? 'Yes' : 'No'"></td>
                     <td>
-                        <a th:href="@{/tipos-residuo/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Edit</a>
+                        <a th:href="@{/tipos-residuo/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Editar</a>
                         <form th:action="@{/tipos-residuo/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(tiposResiduo)}">
-                    <td colspan="7" class="text-center">No tipos residuo found.</td>
+                    <td colspan="7" class="text-center">No existen tipos de resiudo encontrados.</td>
                 </tr>
             </tbody>
         </table>
@@ -51,7 +51,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Tipo Residuo</h5>
+                    <h5 class="modal-title">Agregar Nuevo Tipo Residuo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -80,13 +80,13 @@
                         <div class="mb-3">
                             <label for="activo" class="form-label">Activo</label>
                             <select class="form-select" id="activo" th:field="*{activo}">
-                                <option value="true">Yes</option>
+                                <option value="true">Si</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>

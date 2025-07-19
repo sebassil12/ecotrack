@@ -97,11 +97,12 @@ public class RecoleccionServiceImpl implements RecoleccionService {
         return recoleccionRepository.findAll();
     }
 
-    public List<Recoleccion> getByUsuario(Long usuarioId) {
-        return recoleccionRepository.findByUsuarioId(usuarioId); // Add this method to repo if needed
-    }
-
     public List<Recoleccion> getValidated() {
         return recoleccionRepository.findByValidado(true);
+    }
+
+    @Override
+    public List<Recoleccion> getAllByUsuario(Usuario usuario) {
+        return recoleccionRepository.findByUsuario(usuario); // Asume que tienes este método en el repository (agrega @Query si es necesario)
     }
 }
