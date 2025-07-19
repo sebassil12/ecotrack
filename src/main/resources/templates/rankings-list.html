@@ -36,14 +36,6 @@
             color: #28a745; /* Eco-green accent */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for emphasis */
         }
-        .btn-warning, .btn-danger {
-            border-radius: 8px; /* Consistent rounding */
-            font-size: 0.875rem; /* Smaller for action buttons */
-            transition: transform 0.2s ease, background-color 0.3s ease;
-        }
-        .btn-warning:hover, .btn-danger:hover {
-            transform: translateY(-2px); /* Lift effect */
-        }
         .btn-outline-primary {
             color: #28a745; /* Green text */
             border-color: #28a745;
@@ -53,10 +45,6 @@
         .btn-outline-primary:hover {
             background-color: #28a745; /* Fill on hover */
             color: #fff;
-        }
-        .alert {
-            border-radius: 8px; /* Rounded alerts */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
         /* Aggressive, competitive leaderboard styles */
         .leaderboard-table {
@@ -141,48 +129,27 @@
     <div class="container my-5">
         <h2 class="text-center mb-5">¡Domina el Ranking y Conquista el Liderazgo!</h2> <!-- Motivational heading for competition -->
         
-        <!-- Success/Error Messages with styled alerts -->
-        <div th:if="${success}" class="alert alert-success" role="alert">[[${success}]]</div>
-        <div th:if="${error}" class="alert alert-danger" role="alert">[[${error}]]</div>
-        
-        <!-- Competitive Leaderboard Table -->
+        <!-- Competitive Leaderboard Table (adapted for users and points) -->
         <div class="table-responsive">
             <table class="table leaderboard-table">
                 <thead>
                     <tr>
                         <th>Posición</th>
                         <th>Usuario</th>
-                        <th>Año</th>
-                        <th>Mes</th>
                         <th>Puntos</th>
-                        <th>Total Residuos</th>
-                        <th>Recolecciones</th>
-                        <th>Fecha Cálculo</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="ranking : ${rankings}" th:classappend="'rank-' + ${ranking.posicion} + (ranking.posicion <= 3 ? ' top-rank' : '')">
+                    <tr th:each="usuario, stat : ${usuarios}" th:with="position=${stat.index + 1}" th:classappend="'rank-' + ${position} + (${position} <= 3 ? ' top-rank' : '')">
                         <td>
-                            <i class="bi bi-trophy rank-icon" th:if="${ranking.posicion} <= 3"></i> <!-- Trophy icon for top 3 -->
-                            <span th:text="${ranking.posicion}"></span>
+                            <i class="bi bi-trophy rank-icon" th:if="${position} <= 3"></i> <!-- Trophy icon for top 3 -->
+                            <span th:text="${position}"></span> <!-- Dynamic position based on sorted order -->
                         </td>
-                        <td th:text="${ranking.usuario.nombre}"></td> <!-- Asume que Usuario tiene 'nombre' -->
-                        <td th:text="${ranking.año}"></td>
-                        <td th:text="${ranking.mes}"></td>
-                        <td th:text="${ranking.puntos}"></td>
-                        <td th:text="${ranking.totalResiduos}"></td>
-                        <td th:text="${ranking.recoleccionesCount}"></td>
-                        <td th:text="${ranking.fechaCalculo}"></td>
-                        <td>
-                            <a th:href="@{/rankings/edit/{id}(id=${ranking.id})}" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil-square me-1"></i> Editar</a>
-                            <form th:action="@{/rankings/delete/{id}(id=${ranking.id})}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este ranking?');"><i class="bi bi-trash me-1"></i> Eliminar</button>
-                            </form>
-                        </td>
+                        <td th:text="${usuario.nombre} + ' ' + ${usuario.apellidos}"></td> <!-- Full name (nombre + apellidos) -->
+                        <td th:text="${usuario.puntosTotal}"></td> <!-- Points from usuario.puntosTotal -->
                     </tr>
-                    <tr th:if="${#lists.isEmpty(rankings)}">
-                        <td colspan="9" class="text-center">No hay rankings registrados aún. ¡Empieza a competir!</td>
+                    <tr th:if="${#lists.isEmpty(usuarios)}">
+                        <td colspan="3" class="text-center">No hay usuarios en el ranking aún. ¡Empieza a competir!</td>
                     </tr>
                 </tbody>
             </table>

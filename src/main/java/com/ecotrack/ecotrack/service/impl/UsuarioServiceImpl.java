@@ -1,6 +1,7 @@
 package com.ecotrack.ecotrack.service.impl;
 
 import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
+import com.ecotrack.ecotrack.model.Ranking;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.repository.UsuarioRepositorio;
 import com.ecotrack.ecotrack.service.UsuarioService;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -125,5 +127,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         existing.setFechaActualizacion(LocalDateTime.now());
         return usuarioRepository.save(existing);
+    }
+
+    public List<Usuario> findAllSortedByPuntosDesc() {
+        // Fetch all rankings sorted by 'puntos' descending (highest first)
+        return usuarioRepository.findAll(Sort.by(Sort.Direction.DESC, "puntosTotal"));
     }
 }
