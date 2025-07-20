@@ -1,9 +1,7 @@
 // RankingController.java
 package com.ecotrack.ecotrack.controller; // Ajusta el paquete
 
-import com.ecotrack.ecotrack.model.Ranking;
 import com.ecotrack.ecotrack.model.Usuario;
-import com.ecotrack.ecotrack.service.impl.RankingServiceImpl;
 import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.ecotrack.ecotrack.service.impl;
 
 import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
-import com.ecotrack.ecotrack.model.Ranking;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.repository.UsuarioRepositorio;
 import com.ecotrack.ecotrack.service.UsuarioService;
