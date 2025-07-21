@@ -60,6 +60,10 @@
                         <td th:text="${usuario.activo} ? 'Sí' : 'No'"></td>
                         <td>
                             <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-edit text-white btn-sm"><i class="bi bi-pencil"></i> Editar</a>
+                        <form th:action="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</button>
+                        </form>
+                        
                         </td>
                     </tr>
                     <tr th:if="${usuarios.isEmpty()}">

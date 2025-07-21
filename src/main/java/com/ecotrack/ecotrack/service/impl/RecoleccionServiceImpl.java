@@ -92,7 +92,6 @@ public class RecoleccionServiceImpl implements RecoleccionService {
         usuarioRepository.save(usuario);
     }
 
-    // Query methods (consulting tables)
     public List<Recoleccion> getAll() {
         return recoleccionRepository.findAll();
     }

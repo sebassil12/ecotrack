@@ -32,8 +32,9 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**").permitAll()
                 // Secure your app's endpoints (require login)
                 .requestMatchers("/dashboard/**", "/puntos-verdes/**", "/api/**").authenticated()
+                .requestMatchers("/admin/usuarios/access-denied").permitAll()
                 // Example: Role-based (uncomment if needed for admin-only pages)
-                // .requestMatchers("/admin/**").hasAuthority("ADMINISTRADOR")
+                .requestMatchers("/admin/**").hasAuthority("ADMINISTRADOR")
                 .anyRequest().authenticated() // All other requests require auth
             )
             .formLogin(form -> form
@@ -46,7 +47,11 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout") // Redirect after logout
                 .permitAll()
             )
-            .userDetailsService(usuarioDetailsService); // Use your custom service
+            .userDetailsService(usuarioDetailsService) // Use your custom service
+
+            .exceptionHandling((exceptions) -> exceptions
+                .accessDeniedPage("/admin/usuarios/access-denied")  // ¡Esto redirige a tu endpoint en caso de 403!
+            );
 
         return http.build();
     }

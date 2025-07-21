@@ -33,7 +33,8 @@ public class RecoleccionController {
 
     @GetMapping
     public String showRecolecciones(Model model) {
-        List<Recoleccion> recolecciones = recoleccionService.getAll();
+        Usuario usuario = usuarioService.getCurrentUser(); // For dropdowns
+        List<Recoleccion> recolecciones = recoleccionService.getAllByUsuario(usuario);
         model.addAttribute("recolecciones", recolecciones);
         model.addAttribute("nuevaRecoleccion", new Recoleccion());
         setupDropdowns(model);
@@ -92,7 +93,7 @@ public class RecoleccionController {
     }
 
     private void setupDropdowns(Model model) {
-        model.addAttribute("usuarios", usuarioService.listarTodos());
+        model.addAttribute("usuarios", usuarioService.getCurrentUser());
         model.addAttribute("tiposResiduo", tipoResiduoService.getAll());
         model.addAttribute("puntosVerdes", puntoVerdeServicio.listarTodos()); // Uncomment if needed
     }

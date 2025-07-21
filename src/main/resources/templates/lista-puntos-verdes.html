@@ -139,12 +139,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard"><i class="bi bi-house-door-fill me-1"></i> Home</a> <!-- Home icon linking to dashboard/home -->
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/api/puntos-verdes/registrar"><i class="bi bi-plus-circle me-1"></i> Registrar Punto</a> <!-- Added icon for UX -->
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/api/puntos-verdes/mapa-todos"><i class="bi bi-map me-1"></i> Mapa</a> <!-- Added icon -->
-                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto"> <!-- Right side for profile -->
                     <li class="nav-item dropdown">
@@ -182,7 +176,6 @@
             <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Latitud</th>
@@ -195,7 +188,6 @@
                 </thead>
                 <tbody>
                     <tr th:each="punto : ${puntos}">
-                        <td th:text="${punto.id}"></td>
                         <td th:text="${punto.nombre}"></td>
                         <td th:text="${punto.descripcion}"></td>
                         <td th:text="${punto.latitud}"></td>

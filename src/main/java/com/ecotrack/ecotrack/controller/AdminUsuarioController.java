@@ -56,4 +56,21 @@ public class AdminUsuarioController {
             return "editar-usuario";
         }
     }
+
+    @PostMapping("/eliminar/{id}")
+    public String eliminarUsuario(@PathVariable Long id, Model model) {
+        try {
+            usuarioService.eliminar(id);  // Asumiendo que este método existe en tu service
+            model.addAttribute("mensaje", "Usuario eliminado exitosamente.");
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Error al eliminar el usuario: " + e.getMessage());
+        }
+        return "redirect:/admin/usuarios";  // Vuelve a la lista de usuarios
+    }
+
+    @GetMapping("/access-denied")
+    public String mostrarAccessDenied(Model model) {
+        model.addAttribute("mensaje", "No tienes permisos para acceder a esta sección. Solo administradores permitidos.");
+        return "error-admin";  // Tu template de error
+    }
 }
