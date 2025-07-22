@@ -34,11 +34,23 @@
             </select>
         </div>
         <div class="mb-3">
-            <label for="editValidado" class="form-label">Validado</label>
-            <select class="form-select" id="editValidado" th:field="*{validado}">
-                <option value="false" th:selected="${!editRecoleccion.validado}">No</option>
-                <option value="true" th:selected="${editRecoleccion.validado}">Yes</option>
-            </select>
+            <label for="validado" class="form-label">Validado</label>
+            <!-- Editable only for RECOLECTOR -->
+            <div sec:authorize="hasAuthority('RECOLECTOR')">
+                <select class="form-select" id="validado" th:field="*{validado}">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <!-- Disabled with default false for non-RECOLECTOR -->
+            <div sec:authorize="!hasAuthority('RECOLECTOR')">
+                <select class="form-select" id="validado" th:field="*{validado}" disabled>
+                    <option value="false" selected>No</option>
+                    <option value="true">Yes</option>
+                </select>
+                <!-- Optional: Hidden input to ensure false is submitted -->
+                <input type="hidden" th:field="*{validado}" value="false" />
+            </div>
         </div>
         <div class="mb-3">
             <label for="editObservaciones" class="form-label">Observaciones</label>

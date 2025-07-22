@@ -9,6 +9,8 @@ import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl; // Assume exists
 import com.ecotrack.ecotrack.service.impl.TipoResiduoServiceImpl; // Assume exists
 import com.ecotrack.ecotrack.service.impl.PuntoVerdeServiceImpl; // Assume exists if needed
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,16 +35,41 @@ public class RecoleccionController {
 
     @GetMapping
     public String showRecolecciones(Model model) {
-        Usuario usuario = usuarioService.getCurrentUser(); // For dropdowns
-        List<Recoleccion> recolecciones = recoleccionService.getAllByUsuario(usuario);
+        Usuario usuario = usuarioService.getCurrentUser();
+
+        // Step 2.2: Get current authentication and check if RECOLECTOR
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isRecolector = authentication.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals("RECOLECTOR"));
+
+        // Step 2.3: Fetch recolecciones based on role
+        List<Recoleccion> recolecciones;
+        if (isRecolector) {
+            recolecciones = recoleccionService.getAll();  // All recolecciones for recolectors
+        } else {
+            recolecciones = recoleccionService.getAllByUsuario(usuario);  // Only current user's for others
+        }
+
+        // Step 2.4: Add to model (as before)
         model.addAttribute("recolecciones", recolecciones);
         model.addAttribute("nuevaRecoleccion", new Recoleccion());
-        setupDropdowns(model);
+        setupDropdowns(model);  // Assuming this populates dropdowns like usuarios, tiposResiduo, etc.
         return "recolecciones";
     }
 
     @PostMapping
     public String registrarRecoleccion(@ModelAttribute("nuevaRecoleccion") Recoleccion nuevaRecoleccion) {
+        // Step 3.1: Get current authentication and check role
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isRecolector = authentication.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals("RECOLECTOR"));
+
+        // Step 3.2: Enforce validado restriction
+        if (!isRecolector) {
+            nuevaRecoleccion.setValidado(false); // Override to false for non-RECOLECTOR
+        }
+
+        // Step 3.3: Proceed with saving
         recoleccionService.registrarRecoleccion(nuevaRecoleccion);
         return "redirect:/recolecciones";
     }

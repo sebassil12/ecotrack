@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -186,10 +186,22 @@
                         </div>
                         <div class="mb-3">
                             <label for="validado" class="form-label">Validado</label>
-                            <select class="form-select" id="validado" th:field="*{validado}">
-                                <option value="false">No</option>
-                                <option value="true">Yes</option>
-                            </select>
+                            <!-- Editable only for RECOLECTOR -->
+                            <div sec:authorize="hasAuthority('RECOLECTOR')">
+                                <select class="form-select" id="validado" th:field="*{validado}">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                            <!-- Disabled with default false for non-RECOLECTOR -->
+                            <div sec:authorize="!hasAuthority('RECOLECTOR')">
+                                <select class="form-select" id="validado" th:field="*{validado}" disabled>
+                                    <option value="false" selected>No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                                <!-- Optional: Hidden input to ensure false is submitted -->
+                                <input type="hidden" th:field="*{validado}" value="false" />
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="observaciones" class="form-label">Observaciones</label>
