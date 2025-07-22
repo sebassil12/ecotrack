@@ -1,8 +1,12 @@
 package com.ecotrack.ecotrack.service.impl;
 
+import com.ecotrack.ecotrack.model.Medalla;
 import com.ecotrack.ecotrack.model.Recoleccion;
 import com.ecotrack.ecotrack.model.Usuario;
+import com.ecotrack.ecotrack.model.UsuarioMedalla;
+import com.ecotrack.ecotrack.repository.MedallaRepository;
 import com.ecotrack.ecotrack.repository.RecoleccionRepository;
+import com.ecotrack.ecotrack.repository.UsuarioMedallaRepository;
 import com.ecotrack.ecotrack.repository.UsuarioRepositorio; // Assume this exists
 import com.ecotrack.ecotrack.service.RecoleccionService;
 
@@ -20,7 +24,13 @@ public class RecoleccionServiceImpl implements RecoleccionService {
     private RecoleccionRepository recoleccionRepository;
 
     @Autowired
-    private UsuarioRepositorio usuarioRepository; // Assume this exists for Usuario CRUD
+    private UsuarioRepositorio usuarioRepository;
+
+    @Autowired
+    private MedallaRepository medallaRepository;
+
+    @Autowired
+    private UsuarioMedallaRepository usuarioMedallaRepository;
 
     @Transactional
     public Recoleccion registrarRecoleccion(Recoleccion recoleccion) {
@@ -90,6 +100,26 @@ public class RecoleccionServiceImpl implements RecoleccionService {
     private void updateUserPoints(Usuario usuario, Integer puntosToAdd) {
         usuario.setPuntosTotal(usuario.getPuntosTotal() + puntosToAdd);
         usuarioRepository.save(usuario);
+        List<Medalla> activeMedals = medallaRepository.findByActivaTrueOrderByPuntosRequeridosAsc();
+
+        // Step 2.3: Check each medal and award if eligible
+        for (Medalla medalla : activeMedals) {
+            if (usuario.getPuntosTotal() >= medalla.getPuntosRequeridos() &&
+                !hasUserAchievedMedal(usuario, medalla)) {
+                // Award the medal
+                UsuarioMedalla usuarioMedalla = UsuarioMedalla.builder()
+                    .usuario(usuario)
+                    .medalla(medalla)
+                    .fechaObtenida(LocalDateTime.now())
+                    .puntosMomento(usuario.getPuntosTotal()) // Snapshot of points at award time
+                    .build();
+                usuarioMedallaRepository.save(usuarioMedalla);
+            }
+        }
+    }
+
+    private boolean hasUserAchievedMedal(Usuario usuario, Medalla medalla) {
+        return usuarioMedallaRepository.existsByUsuarioAndMedalla(usuario, medalla);
     }
 
     public List<Recoleccion> getAll() {

@@ -88,6 +88,15 @@
             font-size: 0.8rem; /* Small badges for status */
             border-radius: 20px; /* Pill shape */
         }
+        /* Gray out non-achieved medals */
+        .not-achieved {
+            background-color: #e9ecef !important; /* Light gray background */
+            opacity: 0.7; /* Slight fade for distinction */
+            filter: grayscale(50%); /* Optional: Grayscale effect for icons/images */
+        }
+        .not-achieved .medal-icon {
+            color: #6c757d !important; /* Gray icon for non-achieved */
+        }
         /* Responsive grid adjustments */
         @media (max-width: 768px) {
             .medal-icon { font-size: 4rem; } /* Scale down on mobile */
@@ -138,7 +147,8 @@
         
         <div class="row g-4"> <!-- Bootstrap grid for responsive card layout -->
             <div class="col-12 col-md-6 col-lg-4" th:each="medalla : ${medallas}"> <!-- 3 cards per row on lg, 2 on md, 1 on sm -->
-                <div class="card medal-card text-center p-4"> <!-- Custom medal card -->
+                <div class="card medal-card text-center p-4"
+         th:classappend="${achievedMedalIds.contains(medalla.id)} ? '' : 'not-achieved'"> <!-- Custom medal card -->
                     <i class="bi bi-award medal-icon" th:style="'color: ' + ${medalla.color} + ';'"></i> <!-- Dynamic color; assumes icono is 'bi-award' or adjust -->
                     <div class="card-body">
                         <h5 class="card-title" th:text="${medalla.nombre}"></h5>

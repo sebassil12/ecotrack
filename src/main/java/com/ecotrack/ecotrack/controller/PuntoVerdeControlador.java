@@ -2,6 +2,7 @@ package com.ecotrack.ecotrack.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ecotrack.ecotrack.dto.PuntoVerdeDTO;
 import com.ecotrack.ecotrack.dto.PuntoVerdeRequest;
 import com.ecotrack.ecotrack.model.PuntoVerde;
 import com.ecotrack.ecotrack.service.impl.PuntoVerdeServiceImpl;
@@ -62,9 +64,15 @@ public class PuntoVerdeControlador {
 
     @GetMapping("/mapa-todos") // Nueva URL para ver todos los puntos
     public String verMapaDeTodos(Model model) {
-        // Suponiendo que tienes un método en tu servicio para listar todos
-        List<PuntoVerde> puntos = service.listarTodos(); 
-        model.addAttribute("puntos", puntos); // Pasamos la lista completa
+        List<PuntoVerde> puntosEntities = service.listarTodos(); // Assuming your repo
+
+        // Map to DTOs to avoid entity cycles and lazy loading issues
+        List<PuntoVerdeDTO> puntosDTOs = puntosEntities.stream()
+            .map(p -> new PuntoVerdeDTO(p.getNombre(), p.getDireccion(), p.getLatitud(), p.getLongitud()))
+            .collect(Collectors.toList());
+
+        model.addAttribute("puntos", puntosDTOs);
+        // Add other attributes like usuarioNombre if needed
         return "mapa-todos"; // Usaremos una nueva plantilla
     }
     

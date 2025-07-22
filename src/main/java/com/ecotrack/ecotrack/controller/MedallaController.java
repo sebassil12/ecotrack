@@ -3,7 +3,10 @@ package com.ecotrack.ecotrack.controller;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecotrack.ecotrack.model.Medalla;
+import com.ecotrack.ecotrack.model.Usuario;
+import com.ecotrack.ecotrack.repository.UsuarioMedallaRepository;
 import com.ecotrack.ecotrack.service.impl.MedallaServiceImpl;
+import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 
 @Controller
 @RequestMapping("/medallas")
@@ -26,11 +32,35 @@ public class MedallaController {
     @Autowired
     private MedallaServiceImpl medallaService;
 
+    @Autowired
+    private UsuarioServiceImpl usuarioService;
+
+    @Autowired
+    private UsuarioMedallaRepository usuarioMedallaRepository;
+
     // Listar todas las medallas
     @GetMapping
     public String listMedallas(Model model) {
-        model.addAttribute("medallas", medallaService.findAll());
-        return "medallas-list"; // Plantilla para la lista
+        List<Medalla> medallas = medallaService.findAll();
+        model.addAttribute("medallas", medallas);
+
+        // Step 3.2: Get current user
+        Usuario currentUser = usuarioService.getCurrentUser();
+        if (currentUser == null) {
+            // Handle unauthenticated (e.g., redirect to login)
+            return "redirect:/login";
+        }
+
+        // Step 3.3: Fetch achieved medal IDs for the user
+        Set<Long> achievedMedalIds = usuarioMedallaRepository.findByUsuario(currentUser)
+            .stream()
+            .map(um -> um.getMedalla().getId())
+            .collect(Collectors.toSet());
+
+        model.addAttribute("achievedMedalIds", achievedMedalIds);
+        model.addAttribute("usuarioNombre", currentUser.getNombre()); // Or whatever field holds the display name
+
+        return "medallas-list";
     }
 
     // Mostrar formulario para crear nueva medalla

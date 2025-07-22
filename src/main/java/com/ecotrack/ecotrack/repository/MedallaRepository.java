@@ -1,6 +1,9 @@
 package com.ecotrack.ecotrack.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.ecotrack.ecotrack.model.Medalla;
@@ -9,4 +12,7 @@ import com.ecotrack.ecotrack.model.Medalla;
 public interface MedallaRepository extends JpaRepository<Medalla, Long> {
     // Puedes agregar consultas personalizadas si es necesario, por ejemplo:
     // List<Medalla> findByTipo(Medalla.TipoMedalla tipo);
+
+    @Query("SELECT m FROM Medalla m WHERE m.activa = true ORDER BY m.puntosRequeridos ASC")
+    List<Medalla> findByActivaTrueOrderByPuntosRequeridosAsc();
 }
