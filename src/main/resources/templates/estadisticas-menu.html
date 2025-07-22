@@ -2,25 +2,22 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de Estadistica - Ecotrack</title>
-    <!-- Reuse your existing styles and links -->
+    <title>Menu de Estadisticas - Ecotrack</title>
+    <!-- Reuse your existing styles and links for consistency -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Reuse your global and embed styles */
+        /* Reuse your global styles */
         body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; color: #333; }
         .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
         .navbar-brand { font-weight: 700; color: #28a745; }
         .nav-link { font-weight: 500; transition: color 0.3s ease; }
         .nav-link:hover { color: #28a745; }
         h2 { font-weight: 700; color: #28a745; }
-        .btn-outline-primary { color: #28a745; border-color: #28a745; border-radius: 8px; transition: background-color 0.3s ease, color 0.3s ease; }
-        .btn-outline-primary:hover { background-color: #28a745; color: #fff; }
-        .embed-container { position: relative; overflow: hidden; width: 100%; padding-top: 66.67%; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); background-color: #ffffff; transition: box-shadow 0.3s ease; }
-        .embed-container:hover { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
-        .embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        @media (max-width: 768px) { .embed-container { padding-top: 100%; } }
+        .card { border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .card-icon { font-size: 2.5rem; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -35,9 +32,6 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard"><i class="bi bi-house-door-fill me-1"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/estadisticas"><i class="bi bi-bar-chart-fill me-1"></i> Menu de Estadisticas</a>  <!-- Link back to menu -->
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -61,18 +55,28 @@
         </div>
     </nav>
 
-    <!-- Main Content: Single Embedded Superset Chart -->
+    <!-- Main Content: Cards for each statistic -->
     <div class="container my-5">
-        <h2 class="text-center mb-5">Detalle de Estadistica</h2>
+        <h2 class="text-center mb-5">Menu de Estadisticas</h2>
         
-        <!-- Responsive embed container -->
-        <div class="embed-container">
-            <iframe th:src="${supersetEmbedUrl}" seamless frameborder="0" scrolling="no"></iframe>
+        <div class="row justify-content-center">
+            <!-- Dynamically render a card for each chart -->
+            <div class="col-12 col-md-6 col-lg-3 mb-4" th:each="chart, iter : ${charts}"
+                th:with="chartId=${iter.index + 1}">  <!-- Still compute chartId (no spaces around +) -->
+                <a th:href="@{'/estadisticas/view/' + ${chartId}}" class="text-decoration-none">  <!-- Use string concat inside @{} -->
+                    <div class="card card-square bg-primary text-white">
+                        <div class="card-body">
+                            <i class="bi bi-bar-chart-fill card-icon"></i>
+                            <h5 class="card-title" style="font-weight: 700; margin-top: 1rem;" th:text="'Estadistica ' + ${chartId}">Estadistica</h5>
+                            <p class="card-text">Explora este grafico para medir tu impacto ecologico.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
-        
-        <!-- Back Button to Menu -->
+        <!-- Back Button -->
         <div class="text-center mt-4">
-            <a href="/estadisticas" class="btn btn-outline-primary"><i class="bi bi-arrow-left me-1"></i> Volver al Menu</a>
+            <a href="/dashboard" class="btn btn-outline-primary"><i class="bi bi-house-door-fill me-1"></i> Volver al Dashboard</a>
         </div>
     </div>
 
