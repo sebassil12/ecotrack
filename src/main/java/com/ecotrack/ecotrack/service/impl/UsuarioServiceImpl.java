@@ -97,7 +97,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (!current.getId().equals(dto.getId())) {
             throw new RuntimeException("No puedes editar perfiles de otros usuarios.");
         }
-        // Map DTO to entity, preserving non-editable fields
+
         current.setNombre(dto.getNombre());
         current.setApellidos(dto.getApellidos());
         current.setTelefono(dto.getTelefono());
@@ -110,7 +110,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     // Update any user (for admins, allows all fields including role/activo)
-    public Usuario actualizarUsuarioAdmin(Usuario updatedUsuario) {
+    public Usuario actualizarUsuarioAdmin(EditUsuarioDTO updatedUsuario) {
         Usuario existing = encontrarPorId(updatedUsuario.getId());
         // Update all fields
         existing.setNombre(updatedUsuario.getNombre());

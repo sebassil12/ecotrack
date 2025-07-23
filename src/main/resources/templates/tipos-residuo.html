@@ -15,7 +15,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Puntos Base</th>
@@ -26,28 +25,27 @@
             </thead>
             <tbody>
                 <tr th:each="item : ${tiposResiduo}">
-                    <td th:text="${item.id}"></td>
                     <td th:text="${item.nombre}"></td>
                     <td th:text="${item.descripcion}"></td>
                     <td th:text="${item.puntosBase}"></td>
                     <td th:text="${item.unidadMedida}"></td>
-                    <td th:text="${item.activo} ? 'Yes' : 'No'"></td>
+                    <td th:text="${item.activo} ? 'Sí' : 'No'"></td>
                     <td>
                         <a th:href="@{/tipos-residuo/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Editar</a>
                         <form th:action="@{/tipos-residuo/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(tiposResiduo)}">
-                    <td colspan="7" class="text-center">No existen tipos de resiudo encontrados.</td>
+                    <td colspan="7" class="text-center">No existen tipos de residuo encontrados.</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <!-- Create Modal -->
-    <div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal fade" id="createModal" tabindex="-1" th:if="${nuevoTipoResiduo != null}">  <!-- Protección contra null -->
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -80,7 +78,7 @@
                         <div class="mb-3">
                             <label for="activo" class="form-label">Activo</label>
                             <select class="form-select" id="activo" th:field="*{activo}">
-                                <option value="true">Si</option>
+                                <option value="true">Sí</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
@@ -99,7 +97,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Tipo Residuo</h5>
+                    <h5 class="modal-title">Editar Tipo Residuo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -128,13 +126,13 @@
                         <div class="mb-3">
                             <label for="editActivo" class="form-label">Activo</label>
                             <select class="form-select" id="editActivo" th:field="*{activo}">
-                                <option value="true" th:selected="${editTipoResiduo.activo}">Yes</option>
+                                <option value="true" th:selected="${editTipoResiduo.activo}">Sí</option>
                                 <option value="false" th:selected="${!editTipoResiduo.activo}">No</option>
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
                         </div>
                     </form>
                 </div>
@@ -142,11 +140,18 @@
         </div>
     </div>
 
+    <div class="text-center mt-4">
+        <a href="/dashboard" class="btn btn-outline-primary"><i class="bi bi-house-door-fill me-1"></i> Volver al Dashboard</a> <!-- Enhanced home button -->
+    </div>
+
     <script>
-        // Auto-open edit modal if editing
+        // Auto-open edit modal if editing (con chequeo para evitar error si no existe)
         window.addEventListener('load', function() {
             if (window.location.pathname.includes('/edit/')) {
-                new bootstrap.Modal(document.getElementById('editModal')).show();
+                const editModalElement = document.getElementById('editModal');
+                if (editModalElement) {
+                    new bootstrap.Modal(editModalElement).show();
+                }
             }
         });
     </script>

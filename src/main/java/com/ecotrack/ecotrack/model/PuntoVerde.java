@@ -85,6 +85,6 @@ public class PuntoVerde {
     private LocalDateTime fechaRegistro;
     
     // Relaciones
-    @OneToMany(mappedBy = "puntoVerde", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "puntoVerde", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Recoleccion> recolecciones;
 }

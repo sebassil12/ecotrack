@@ -31,5 +31,5 @@ public interface UsuarioService {
     Usuario actualizarPerfil(EditUsuarioDTO dto);
 
 // Update any user (for admins, allows all fields including role/activo)
-    Usuario actualizarUsuarioAdmin(Usuario updatedUsuario);
+    Usuario actualizarUsuarioAdmin(EditUsuarioDTO updatedUsuario);
 }

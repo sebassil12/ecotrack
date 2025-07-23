@@ -3,6 +3,7 @@ package com.ecotrack.ecotrack.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,14 +15,14 @@ import com.ecotrack.ecotrack.repository.PuntoVerdeRepositorio;
 import com.ecotrack.ecotrack.service.PuntoVerdeService;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class PuntoVerdeServiceImpl implements PuntoVerdeService {
-	
-	private final PuntoVerdeRepositorio repository;
-    private final WebClient nominatimClient;
+    
+    @Autowired
+    private PuntoVerdeRepositorio repository;
+
+    @Autowired
+    private WebClient nominatimClient;
 
     public PuntoVerdeResponse registrar(PuntoVerdeRequest request) {
         String direccion = obtenerDireccion(request.latitud(), request.longitud());

@@ -2,6 +2,7 @@ package com.ecotrack.ecotrack.configuration; // Adjust package
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,13 +29,34 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                // Allow public access to login, registration, and static resources
+                // Permitido para todo el publico
                 .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**").permitAll()
-                // Secure your app's endpoints (require login)
-                .requestMatchers("/dashboard/**", "/puntos-verdes/**", "/api/**").authenticated()
-                .requestMatchers("/admin/usuarios/access-denied").permitAll()
-                // Example: Role-based (uncomment if needed for admin-only pages)
+                .requestMatchers("/access-denied").permitAll()
+
+                // Autenticación requerida para las siguientes rutas
+                .requestMatchers("/dashboard/**", "/puntos-verdes/**").authenticated()
+
+                // Rutas protegidas por roles
                 .requestMatchers("/admin/**").hasAuthority("ADMINISTRADOR")
+                
+                //Tipos de residuos
+                .requestMatchers(HttpMethod.POST, "/tipos-residuo").hasAuthority("ADMINISTRADOR")
+                .requestMatchers("/tipos-residuo/edit/**").hasAuthority("ADMINISTRADOR")
+                .requestMatchers("/tipos-residuo/update/**").hasAuthority("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/tipos-residuo/delete/**").hasAuthority("ADMINISTRADOR")
+
+                // Medallas
+                .requestMatchers(HttpMethod.POST, "/medallas").hasAuthority("ADMINISTRADOR")
+                .requestMatchers( "/medallas/new").hasAuthority("ADMINISTRADOR")
+                // .requestMatchers(HttpMethod.POST, "/tipos-residuo/delete/**").hasAuthority("ADMINISTRADOR")
+
+                // Puntos verdes
+                .requestMatchers( "/api/puntos-verdes/registrar").hasAuthority("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/puntos-verdes/registrar").hasAuthority("ADMINISTRADOR")
+                .requestMatchers( "/api/puntos-verdes/editar/**").hasAuthority("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/puntos-verdes/editar/**").hasAuthority("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/puntos-verdes/eliminar/**").hasAuthority("ADMINISTRADOR")
+
                 .anyRequest().authenticated() // All other requests require auth
             )
             .formLogin(form -> form
@@ -50,7 +72,12 @@ public class SecurityConfig {
             .userDetailsService(usuarioDetailsService) // Use your custom service
 
             .exceptionHandling((exceptions) -> exceptions
-                .accessDeniedPage("/admin/usuarios/access-denied")  // ¡Esto redirige a tu endpoint en caso de 403!
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                // Log para debug (opcional, quítalo si no lo necesitas)
+                System.err.println("Access Denied for request: " + request.getMethod() + " " + request.getRequestURI() + " - " + accessDeniedException.getMessage());
+                // Redirige a tu página de error
+                response.sendRedirect("/access-denied");
+            })
             );
 
         return http.build();

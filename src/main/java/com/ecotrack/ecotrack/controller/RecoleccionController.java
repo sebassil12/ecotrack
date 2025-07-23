@@ -41,7 +41,7 @@ public class RecoleccionController {
         // Step 2.2: Get current authentication and check if RECOLECTOR
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isRecolector = authentication.getAuthorities().stream()
-            .anyMatch(auth -> auth.getAuthority().equals("RECOLECTOR"));
+            .anyMatch(auth -> auth.getAuthority().equals("RECOLECTOR") | auth.getAuthority().equals("ADMINISTRADOR"));
 
         // Step 2.3: Fetch recolecciones based on role
         List<Recoleccion> recolecciones;
@@ -85,16 +85,6 @@ public class RecoleccionController {
 
     @PostMapping("/update/{id}")
     public String updateRecoleccion(@PathVariable Long id, @ModelAttribute("editRecoleccion") Recoleccion updatedRecoleccion) {
-        // No need to load existingRecoleccion here if you're going to pass updatedRecoleccion directly
-        // and let the service handle the merging.
-        // However, if you have specific logic in the controller for related entities,
-        // you might keep it, but be aware of the persistence context issue.
-
-        // A cleaner approach is to pass 'updatedRecoleccion' and the ID to the service
-        // and let the service manage loading and merging.
-
-        // Example of passing updatedRecoleccion directly:
-        // recoleccionService.updateRecoleccion(id, updatedRecoleccion);
 
         // If you need to handle related entities in the controller before passing:
         Recoleccion existingRecoleccion = recoleccionService.getById(id); // Still loading here for related entities
@@ -102,12 +92,6 @@ public class RecoleccionController {
         // Update simple fields from the form data (updatedRecoleccion) to the existing one
         existingRecoleccion.setCantidad(updatedRecoleccion.getCantidad());
         existingRecoleccion.setObservaciones(updatedRecoleccion.getObservaciones());
-        // Crucially, DO NOT set validado here in the controller directly from updatedRecoleccion if the service
-        // needs to check the 'before' state.
-        // Instead, let the service handle the 'validado' change based on its internal logic.
-        // If 'validado' is coming from the form, you should pass it, but the service needs
-        // to compare it to the DB's current state.
-
         // Handle related entities based on IDs, as these are typically independent updates
         if (updatedRecoleccion.getUsuario() != null && updatedRecoleccion.getUsuario().getId() != null) {
             Usuario usuario = usuarioService.encontrarPorId(updatedRecoleccion.getUsuario().getId());

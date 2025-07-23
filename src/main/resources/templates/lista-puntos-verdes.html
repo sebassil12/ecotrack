@@ -149,7 +149,11 @@
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="navbarDropdown"> <!-- Added shadow for polish -->
                             <li><a class="dropdown-item" th:href="@{/perfil/editar}">Editar Perfil</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>

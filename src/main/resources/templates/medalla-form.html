@@ -24,11 +24,6 @@
                         <div th:if="${#fields.hasErrors('descripcion')}" class="text-danger" th:errors="*{descripcion}"></div>
                     </div>
                     <div class="mb-3">
-                        <label for="icono" class="form-label">Icono (URL o nombre de ícono)</label>
-                        <input type="text" class="form-control" id="icono" th:field="*{icono}">
-                        <div th:if="${#fields.hasErrors('icono')}" class="text-danger" th:errors="*{icono}"></div>
-                    </div>
-                    <div class="mb-3">
                         <label for="puntosRequeridos" class="form-label">Puntos Requeridos</label>
                         <input type="number" class="form-control" id="puntosRequeridos" th:field="*{puntosRequeridos}" min="1" required>
                         <div th:if="${#fields.hasErrors('puntosRequeridos')}" class="text-danger" th:errors="*{puntosRequeridos}"></div>
@@ -39,11 +34,6 @@
                             <option th:each="tipo : ${tiposMedalla}" th:value="${tipo}" th:text="${tipo}"></option>
                         </select>
                         <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="color" class="form-label">Color (ej. #00FF00 o green)</label>
-                        <input type="text" class="form-control" id="color" th:field="*{color}">
-                        <div th:if="${#fields.hasErrors('color')}" class="text-danger" th:errors="*{color}"></div>
                     </div>
                     <button type="submit" class="btn btn-success">Guardar Medalla</button>
                     <a href="/medallas" class="btn btn-secondary">Cancelar</a>

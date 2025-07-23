@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 
 import com.ecotrack.ecotrack.model.Usuario.RolUsuario;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -27,11 +29,11 @@ public class EditUsuarioDTO {
     @Size(max = 150)
     private String email;
     
-    // Password is optional: No @NotBlank or @Size(min) – only validate if provided
-    @Size(min = 8, message = "La contraseña debe tener mínimo 8 caracteres", max = 255)
     private String password;
     
     @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
+    @Pattern(regexp = "^(09)?[0-9\\-\\s]{8,18}$", message = "El teléfono debe ser numérico, opcionalmente empezando con '09', y con longitud válida (ej: 0912345678 o 12345678)")
+    @Column(length = 20)
     private String telefono;
     
     // Add other editable fields if needed (e.g., for admin: rol, activo, etc.)

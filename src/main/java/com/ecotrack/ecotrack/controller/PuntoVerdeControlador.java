@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ public class PuntoVerdeControlador {
     private final PuntoVerdeServiceImpl service;
     private String API = "/api/puntos-verdes";
     
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/registrar")
     public String mostrarFormularioRegistro(Model model) {
         // Create an "empty" record with defaults
@@ -44,6 +46,7 @@ public class PuntoVerdeControlador {
         return "registrar-punto-verde";
     }
     
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PostMapping("/registrar")
     public String registrarPunto(@Valid @ModelAttribute("puntoRequest") PuntoVerdeRequest request, 
                                  BindingResult bindingResult, Model model) {
@@ -83,6 +86,7 @@ public class PuntoVerdeControlador {
         return "lista-puntos-verdes"; // Thymeleaf template name
     }
     
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PostMapping("/eliminar")
     public String eliminarPunto(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -96,6 +100,7 @@ public class PuntoVerdeControlador {
         return "redirect:" + completeURL; // Redirect back to the list
     }
 
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -122,7 +127,7 @@ public class PuntoVerdeControlador {
         }
     }
 
-    // New POST endpoint to handle edit submission
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PostMapping("/editar/{id}")
     public String editarPunto(@PathVariable Long id, 
                               @Valid @ModelAttribute("puntoRequest") PuntoVerdeRequest request, 

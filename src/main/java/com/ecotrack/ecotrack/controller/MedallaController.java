@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,6 +65,7 @@ public class MedallaController {
     }
 
     // Mostrar formulario para crear nueva medalla
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("medalla", new Medalla());
@@ -72,6 +74,7 @@ public class MedallaController {
     }
 
     // Mostrar formulario para editar medalla existente (ahora usa template separado)
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Medalla> optionalMedalla = medallaService.findById(id);
@@ -87,6 +90,7 @@ public class MedallaController {
 
     // Guardar o actualizar medalla (maneja tanto create como update)
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public String saveMedalla(@Valid @ModelAttribute Medalla medalla, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("tiposMedalla", Medalla.TipoMedalla.values());
@@ -104,6 +108,7 @@ public class MedallaController {
 
     // Eliminar medalla
     @PostMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public String deleteMedalla(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Medalla> optionalMedalla = medallaService.findById(id);
         if (optionalMedalla.isPresent()) {

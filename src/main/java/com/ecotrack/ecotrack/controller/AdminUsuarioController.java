@@ -1,5 +1,6 @@
 package com.ecotrack.ecotrack.controller;
 
+import com.ecotrack.ecotrack.dto.EditUsuarioDTO;
 import com.ecotrack.ecotrack.model.Usuario;
 import com.ecotrack.ecotrack.service.impl.UsuarioServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/usuarios")
-@PreAuthorize("hasAuthority('ADMINISTRADOR')") // Extra security layer
+@PreAuthorize("hasAuthority('ADMINISTRADOR')")
 public class AdminUsuarioController {
 
     private final UsuarioServiceImpl usuarioService;
@@ -41,7 +42,7 @@ public class AdminUsuarioController {
 
     @PostMapping("/editar/{id}")
     public String procesarEditar(@PathVariable Long id, 
-                                 @Valid @ModelAttribute("usuario") Usuario usuario, 
+                                 @Valid @ModelAttribute("usuario") EditUsuarioDTO usuario, 
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "editar-usuario";
@@ -68,9 +69,4 @@ public class AdminUsuarioController {
         return "redirect:/admin/usuarios";  // Vuelve a la lista de usuarios
     }
 
-    @GetMapping("/access-denied")
-    public String mostrarAccessDenied(Model model) {
-        model.addAttribute("mensaje", "No tienes permisos para acceder a esta sección. Solo administradores permitidos.");
-        return "error-admin";  // Tu template de error
-    }
 }

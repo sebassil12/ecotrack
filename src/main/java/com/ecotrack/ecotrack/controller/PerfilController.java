@@ -33,7 +33,10 @@ public class PerfilController {
         dto.setApellidos(currentUser.getApellidos());
         dto.setEmail(currentUser.getEmail());
         dto.setTelefono(currentUser.getTelefono());
-        // dto.setPassword(""); // Leave blank
+        dto.setRol(currentUser.getRol());
+        dto.setPuntosTotal(currentUser.getPuntosTotal());
+        dto.setNivel(currentUser.getNivel());
+        dto.setFechaRegistro(currentUser.getFechaRegistro());
         
         model.addAttribute("editUsuario", dto); // Bind to DTO
         // Add username for navbar

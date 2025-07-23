@@ -68,19 +68,11 @@ public class RecoleccionServiceImpl implements RecoleccionService {
         // 2. Store the original 'validado' status for comparison.
         boolean wasValidated = existing.getValidado();
 
-        // 3. Update simple fields from the 'updatedRecoleccion' (from the form)
-        // to the 'existing' entity (from the database).
         existing.setTipoResiduo(updatedRecoleccion.getTipoResiduo());
         existing.setCantidad(updatedRecoleccion.getCantidad());
         existing.setObservaciones(updatedRecoleccion.getObservaciones());
         existing.setPuntoVerde(updatedRecoleccion.getPuntoVerde());
 
-        // 4. Update related entities based on IDs from updatedRecoleccion,
-        // ensuring they are managed entities if they need to be.
-        // NOTE: If your controller already handles setting these relations on a Recoleccion object
-        // and passes that object, you might just copy those over.
-        // However, it's often safer to fetch them again within the transaction if needed,
-        // or ensure they are properly managed.
         if (updatedRecoleccion.getUsuario() != null && updatedRecoleccion.getUsuario().getId() != null) {
             Usuario usuario = usuarioService.encontrarPorId(updatedRecoleccion.getUsuario().getId());
             existing.setUsuario(usuario);
@@ -115,9 +107,6 @@ public class RecoleccionServiceImpl implements RecoleccionService {
             existing.setFechaValidacion(null);
             existing.setValidadoPor(null);
         }
-        // If wasValidated == willBeValidated (i.e., no change in validation status),
-        // then no user points update related to validation status change is needed.
-
         return recoleccionRepository.save(existing);
     }
 
@@ -154,7 +143,7 @@ public class RecoleccionServiceImpl implements RecoleccionService {
         usuarioRepository.save(usuario);
         List<Medalla> activeMedals = medallaRepository.findByActivaTrueOrderByPuntosRequeridosAsc();
 
-        // Step 2.3: Check each medal and award if eligible
+        updateLevel(usuario);
         for (Medalla medalla : activeMedals) {
             if (usuario.getPuntosTotal() >= medalla.getPuntosRequeridos() &&
                 !hasUserAchievedMedal(usuario, medalla)) {
@@ -167,6 +156,15 @@ public class RecoleccionServiceImpl implements RecoleccionService {
                     .build();
                 usuarioMedallaRepository.save(usuarioMedalla);
             }
+        }
+    }
+
+    private void updateLevel(Usuario usuario) {
+        int newLevel = usuario.getPuntosTotal() / 100;
+         // Adjust logic as needed
+        if (newLevel != usuario.getNivel() && newLevel > 0) {
+            usuario.setNivel(newLevel);
+            usuarioRepository.save(usuario);
         }
     }
 
