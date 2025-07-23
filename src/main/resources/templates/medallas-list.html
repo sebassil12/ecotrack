@@ -159,7 +159,13 @@
                         <div class="mt-3">
                             <!-- Actions with styled buttons -->
                             <a th:href="@{/medallas/edit/{id}(id=${medalla.id})}" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil-square me-1"></i> Editar</a>
-                            <a th:href="@{/medallas/delete/{id}(id=${medalla.id})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta medalla?');"><i class="bi bi-trash me-1"></i> Eliminar</a>
+                            <!-- <a th:href="@{/medallas/delete/{id}(id=${medalla.id})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta medalla?');"><i class="bi bi-trash me-1"></i> Eliminar</a> -->
+                        <form th:action="@{/medallas/delete/eliminar}" method="post" style="display: inline;">
+                            <input type="hidden" name="id" th:value="${medalla.id}" />
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este punto verde?');">
+                                <i class="bi bi-trash me-1"></i> Eliminar
+                            </button>
+                        </form>
                         </div>
                     </div>
                 </div>

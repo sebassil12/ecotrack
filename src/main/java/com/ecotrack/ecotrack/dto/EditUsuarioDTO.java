@@ -31,9 +31,9 @@ public class EditUsuarioDTO {
     
     private String password;
     
-    @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
-    @Pattern(regexp = "^(09)?[0-9\\-\\s]{8,18}$", message = "El teléfono debe ser numérico, opcionalmente empezando con '09', y con longitud válida (ej: 0912345678 o 12345678)")
-    @Column(length = 20)
+    // @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
+    // @Pattern(regexp = "^(09)?[0-9\\-\\s]{8,18}$", message = "El teléfono debe ser numérico, opcionalmente empezando con '09', y con longitud válida (ej: 0912345678 o 12345678)")
+    // @Column(length = 20)
     private String telefono;
     
     // Add other editable fields if needed (e.g., for admin: rol, activo, etc.)

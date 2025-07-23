@@ -48,6 +48,7 @@ public class SecurityConfig {
                 // Medallas
                 .requestMatchers(HttpMethod.POST, "/medallas").hasAuthority("ADMINISTRADOR")
                 .requestMatchers( "/medallas/new").hasAuthority("ADMINISTRADOR")
+                .requestMatchers( HttpMethod.POST,"/medallas/delete/**").hasAuthority("ADMINISTRADOR")
                 // .requestMatchers(HttpMethod.POST, "/tipos-residuo/delete/**").hasAuthority("ADMINISTRADOR")
 
                 // Puntos verdes
