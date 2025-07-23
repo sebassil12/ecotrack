@@ -14,7 +14,7 @@ public class EstadisticasController {
     // List of available Superset embed URLs (expand this as you add more charts)
     private static final List<String> CHART_URLS = List.of(
         "http://localhost:8088/superset/explore/p/1Zej8l2jrPM/?standalone=1&height=400",  // Chart 1
-        "http://localhost:8088/superset/explore/p/47RE6K3jgkD/?standalone=1&height=400"   // Chart 2
+        "http://localhost:8088/superset/explore/p/aVyELRZNMdQ/?standalone=1&height=400"   // Chart 2
     );
 
     // Main menu of statistics (shows cards)

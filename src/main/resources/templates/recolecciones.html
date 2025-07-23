@@ -117,7 +117,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Usuario</th>
                     <th>Tipo Residuo</th>
                     <th>Cantidad</th>
@@ -130,13 +129,12 @@
             </thead>
             <tbody>
                 <tr th:each="item : ${recolecciones}">
-                    <td th:text="${item.id}"></td>
                     <td th:text="${item.usuario.nombre} ?: ${item.usuario.id}"></td>
                     <td th:text="${item.tipoResiduo.nombre} ?: ${item.tipoResiduo.id}"></td>
                     <td th:text="${item.cantidad}"></td>
                     <td th:text="${item.puntos}"></td>
                     <td th:text="${item.puntoVerde.nombre} ?: ${item.puntoVerde.id}"></td>
-                    <td th:text="${item.validado} ? 'Yes' : 'No'"></td>
+                    <td th:text="${item.validado} ? 'Si' : 'No'"></td>
                     <td th:text="${#temporals.format(item.fechaRecoleccion, 'yyyy-MM-dd HH:mm')}"></td>
                     <td>
                         <a th:href="@{/recolecciones/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil-square"></i> Editar</a>
@@ -190,14 +188,14 @@
                             <div sec:authorize="hasAuthority('RECOLECTOR')">
                                 <select class="form-select" id="validado" th:field="*{validado}">
                                     <option value="false">No</option>
-                                    <option value="true">Yes</option>
+                                    <option value="true">Si</option>
                                 </select>
                             </div>
                             <!-- Disabled with default false for non-RECOLECTOR -->
                             <div sec:authorize="!hasAuthority('RECOLECTOR')">
                                 <select class="form-select" id="validado" th:field="*{validado}" disabled>
                                     <option value="false" selected>No</option>
-                                    <option value="true">Yes</option>
+                                    <option value="true">Si</option>
                                 </select>
                                 <!-- Optional: Hidden input to ensure false is submitted -->
                                 <input type="hidden" th:field="*{validado}" value="false" />

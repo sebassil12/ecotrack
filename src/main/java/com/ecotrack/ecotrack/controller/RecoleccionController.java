@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -74,45 +75,59 @@ public class RecoleccionController {
         return "redirect:/recolecciones";
     }
 
-    // CAMBIOS AQUÍ: Retorna la nueva plantilla y prepara solo lo necesario para edición
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Recoleccion recoleccion = recoleccionService.getById(id);
         model.addAttribute("editRecoleccion", recoleccion);
-        setupDropdowns(model); // Prepara los dropdowns (usuarios, tiposResiduo, puntosVerdes)
-        return "edit-recoleccion"; // Nueva plantilla
+        setupDropdowns(model); // No changes here—logic moves inside setupDropdowns
+        return "edit-recoleccion";
     }
 
     @PostMapping("/update/{id}")
     public String updateRecoleccion(@PathVariable Long id, @ModelAttribute("editRecoleccion") Recoleccion updatedRecoleccion) {
-        // Cargar la recolección existente para evitar sobrescribir campos no editados
-        Recoleccion existingRecoleccion = recoleccionService.getById(id);
-        
-        // Actualizar campos simples
+        // No need to load existingRecoleccion here if you're going to pass updatedRecoleccion directly
+        // and let the service handle the merging.
+        // However, if you have specific logic in the controller for related entities,
+        // you might keep it, but be aware of the persistence context issue.
+
+        // A cleaner approach is to pass 'updatedRecoleccion' and the ID to the service
+        // and let the service manage loading and merging.
+
+        // Example of passing updatedRecoleccion directly:
+        // recoleccionService.updateRecoleccion(id, updatedRecoleccion);
+
+        // If you need to handle related entities in the controller before passing:
+        Recoleccion existingRecoleccion = recoleccionService.getById(id); // Still loading here for related entities
+
+        // Update simple fields from the form data (updatedRecoleccion) to the existing one
         existingRecoleccion.setCantidad(updatedRecoleccion.getCantidad());
-        existingRecoleccion.setValidado(updatedRecoleccion.getValidado());
         existingRecoleccion.setObservaciones(updatedRecoleccion.getObservaciones());
-        // ... otros campos simples que edites
-        
-        // Actualizar entidades relacionadas basadas en IDs
+        // Crucially, DO NOT set validado here in the controller directly from updatedRecoleccion if the service
+        // needs to check the 'before' state.
+        // Instead, let the service handle the 'validado' change based on its internal logic.
+        // If 'validado' is coming from the form, you should pass it, but the service needs
+        // to compare it to the DB's current state.
+
+        // Handle related entities based on IDs, as these are typically independent updates
         if (updatedRecoleccion.getUsuario() != null && updatedRecoleccion.getUsuario().getId() != null) {
-            Usuario usuario = usuarioService.encontrarPorId(updatedRecoleccion.getUsuario().getId()); // Asume que tienes un método getById en UsuarioService
+            Usuario usuario = usuarioService.encontrarPorId(updatedRecoleccion.getUsuario().getId());
             existingRecoleccion.setUsuario(usuario);
         }
         if (updatedRecoleccion.getTipoResiduo() != null && updatedRecoleccion.getTipoResiduo().getId() != null) {
-            TipoResiduo tipoResiduo = tipoResiduoService.getById(updatedRecoleccion.getTipoResiduo().getId()); // Asume método getById
+            TipoResiduo tipoResiduo = tipoResiduoService.getById(updatedRecoleccion.getTipoResiduo().getId());
             existingRecoleccion.setTipoResiduo(tipoResiduo);
         }
         if (updatedRecoleccion.getPuntoVerde() != null && updatedRecoleccion.getPuntoVerde().getId() != null) {
-            PuntoVerde puntoVerde = puntoVerdeServicio.buscarPorId(updatedRecoleccion.getPuntoVerde().getId()); // Asume método getById
+            PuntoVerde puntoVerde = puntoVerdeServicio.buscarPorId(updatedRecoleccion.getPuntoVerde().getId());
             existingRecoleccion.setPuntoVerde(puntoVerde);
         }
-        
-        // Guardar la recolección actualizada
-        recoleccionService.updateRecoleccion(id, existingRecoleccion);
+
+        // Pass the original updatedRecoleccion to the service, or pass specific fields
+        // that should be used for the 'validado' logic.
+        // The most robust way is to pass 'updatedRecoleccion' directly and let the service merge.
+        recoleccionService.updateRecoleccion(id, updatedRecoleccion); // Pass updatedRecoleccion directly
         return "redirect:/recolecciones";
     }
-
     @PostMapping("/delete/{id}")
     public String deleteRecoleccion(@PathVariable Long id) {
         recoleccionService.deleteRecoleccion(id);
@@ -120,8 +135,25 @@ public class RecoleccionController {
     }
 
     private void setupDropdowns(Model model) {
-        model.addAttribute("usuarios", usuarioService.getCurrentUser());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isRecolector = authentication != null && authentication.isAuthenticated() &&
+            authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("RECOLECTOR"));
+
+        List<Usuario> usuarios = new ArrayList<>(); // Inicializa la lista aquí para simplicidad
+        if (isRecolector) {
+            usuarios = usuarioService.listarTodos(); // Todos los usuarios para recolectores
+        } else {
+            Usuario currentUser = usuarioService.getCurrentUser();
+            if (currentUser != null) { // Chequeo para evitar null
+                usuarios.add(currentUser); // Solo el usuario actual para no recolectores
+            }
+            // Opcional: Si quieres manejar el caso de null (e.g., no autenticado), podrías agregar un log o un usuario fallback, pero no es estrictamente necesario.
+        }
+        model.addAttribute("usuarios", usuarios); // Agrega la lista (nunca un objeto único)
+        
+        // Resto de dropdowns (sin cambios)
         model.addAttribute("tiposResiduo", tipoResiduoService.getAll());
-        model.addAttribute("puntosVerdes", puntoVerdeServicio.listarTodos()); // Uncomment if needed
+        model.addAttribute("puntosVerdes", puntoVerdeServicio.listarTodos()); // Descomenta si es necesario
     }
 }
